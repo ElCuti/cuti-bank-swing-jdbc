@@ -378,6 +378,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         if (nombre.isEmpty() || dni.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this, "El Nombre y el DNI son campos obligatorios", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
         Usuario nuevoUsuario = new Usuario();
@@ -394,6 +395,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             txtUsuarioCrear.setText("");
             txtApellidoCrear.setText("");
             txtDNICrear.setText("");
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed: Usuario.DNI")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: ESTE DNI YA ESTA REGISTRADO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+
         } finally {
             em.close();
         }
