@@ -28,6 +28,10 @@ import javax.persistence.Table;
     @NamedQuery(name = "Usuario.findByApellido", query = "SELECT u FROM Usuario u WHERE u.apellido = :apellido")})
 public class Usuario implements Serializable {
 
+    @Basic(optional = false)
+    @Column(name = "DNI")
+    private String dni;
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected UsuarioPK usuarioPK;
@@ -118,6 +122,14 @@ public class Usuario implements Serializable {
     @Override
     public String toString() {
         return "com.trabajojdbc.gestion_bancaria.Usuario[ usuarioPK=" + usuarioPK + " ]";
+    }
+
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
     }
     
 }

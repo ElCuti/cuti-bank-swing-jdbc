@@ -27,7 +27,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initComponents() {
 
         panelContenedor = new javax.swing.JPanel();
-        panelTransacciones = new javax.swing.JPanel();
+        panelLogin1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtCuenta = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
@@ -35,7 +35,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnEntrar = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txtAlerta = new javax.swing.JLabel();
-        panelLogin = new javax.swing.JPanel();
+        btnBorrar = new javax.swing.JButton();
+        btnRegistrar = new javax.swing.JButton();
+        panelTransacciones = new javax.swing.JPanel();
         txtBienvenida = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
@@ -54,56 +56,68 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         txtAlerta.setText(".");
 
-        javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
-        panelTransacciones.setLayout(panelTransaccionesLayout);
-        panelTransaccionesLayout.setHorizontalGroup(
-            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(158, 158, 158)
-                        .addComponent(jLabel2)
-                        .addGap(27, 27, 27)
-                        .addComponent(txtAlerta, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(147, 147, 147)
-                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+        btnBorrar.setText("BORRAR");
+
+        btnRegistrar.setText("REGISTRARSE");
+
+        javax.swing.GroupLayout panelLogin1Layout = new javax.swing.GroupLayout(panelLogin1);
+        panelLogin1.setLayout(panelLogin1Layout);
+        panelLogin1Layout.setHorizontalGroup(
+            panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLogin1Layout.createSequentialGroup()
+                .addGap(0, 6, Short.MAX_VALUE)
+                .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelLogin1Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelLogin1Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnEntrar)
+                                    .addComponent(btnBorrar))
+                                .addGap(154, 154, 154)
+                                .addComponent(btnRegistrar))
+                            .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtCuenta))))
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(161, 161, 161)
-                        .addComponent(btnEntrar)))
+                                .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelLogin1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel2)
+                                .addGap(32, 32, 32)
+                                .addComponent(txtAlerta, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-        panelTransaccionesLayout.setVerticalGroup(
-            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTransaccionesLayout.createSequentialGroup()
+        panelLogin1Layout.setVerticalGroup(
+            panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLogin1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jLabel3)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel2))
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelLogin1Layout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(9, 9, 9)
-                        .addComponent(txtAlerta)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnEntrar)
-                .addContainerGap(86, Short.MAX_VALUE))
+                        .addGroup(panelLogin1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtAlerta)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnEntrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnBorrar)
+                        .addContainerGap(55, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLogin1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRegistrar)
+                        .addGap(65, 65, 65))))
         );
 
-        panelContenedor.add(panelTransacciones, "pantalla_transacciones\n");
+        panelContenedor.add(panelLogin1, "pantalla_login");
 
         txtBienvenida.setText("m");
 
@@ -114,23 +128,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Enviar");
 
-        javax.swing.GroupLayout panelLoginLayout = new javax.swing.GroupLayout(panelLogin);
-        panelLogin.setLayout(panelLoginLayout);
-        panelLoginLayout.setHorizontalGroup(
-            panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLoginLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
+        panelTransacciones.setLayout(panelTransaccionesLayout);
+        panelTransaccionesLayout.setHorizontalGroup(
+            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTransaccionesLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
-                .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(btnExit)
                     .addComponent(txtBienvenida))
-                .addContainerGap(288, Short.MAX_VALUE))
+                .addContainerGap(291, Short.MAX_VALUE))
         );
-        panelLoginLayout.setVerticalGroup(
-            panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelLoginLayout.createSequentialGroup()
+        panelTransaccionesLayout.setVerticalGroup(
+            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTransaccionesLayout.createSequentialGroup()
                 .addGap(28, 28, 28)
                 .addComponent(txtBienvenida)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
@@ -140,7 +154,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(30, 30, 30))
         );
 
-        panelContenedor.add(panelLogin, "pantalla_login\n");
+        panelContenedor.add(panelTransacciones, "pantalla_transacciones\n\n");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -196,14 +210,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnEntrar;
     private javax.swing.JButton btnExit;
+    private javax.swing.JButton btnRegistrar;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel panelContenedor;
-    private javax.swing.JPanel panelLogin;
+    private javax.swing.JPanel panelLogin1;
     private javax.swing.JPanel panelTransacciones;
     private javax.swing.JLabel txtAlerta;
     private javax.swing.JLabel txtBienvenida;
