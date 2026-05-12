@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <persistence-unit name="com.trabajoJDBC_Gestion_Bancaria_jar_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>com.trabajojdbc.gestion_bancaria.Cuenta</class>
+    <class>com.trabajojdbc.gestion_bancaria.Usuario</class>
+    <class>com.trabajojdbc.gestion_bancaria.Transacciones</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:C:\Users\Alumnado\Documents\GitHub\ProyectoJavaJDBC_GestionBancaria\Base de datos/Datos.db"/>
+      <property name="javax.persistence.jdbc.user" value=""/>
+      <property name="javax.persistence.jdbc.driver" value="org.sqlite.JDBC"/>
+      <property name="javax.persistence.jdbc.password" value=""/>
+    </properties>
+  </persistence-unit>
+</persistence>
