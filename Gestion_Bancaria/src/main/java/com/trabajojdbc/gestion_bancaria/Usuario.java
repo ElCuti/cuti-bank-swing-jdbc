@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -33,11 +33,10 @@ public class Usuario implements Serializable {
     private String dni;
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected UsuarioPK usuarioPK;
+    @Id
     @Basic(optional = false)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
     @Basic(optional = false)
     @Column(name = "Nombre")
     private String nombre;
@@ -49,22 +48,13 @@ public class Usuario implements Serializable {
     public Usuario() {
     }
 
-    public Usuario(UsuarioPK usuarioPK) {
-        this.usuarioPK = usuarioPK;
+    public Usuario(Integer id) {
+        this.id = id;
     }
 
-    public Usuario(UsuarioPK usuarioPK, int id, String nombre) {
-        this.usuarioPK = usuarioPK;
+    public Usuario(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
-    }
-
-    public UsuarioPK getUsuarioPK() {
-        return usuarioPK;
-    }
-
-    public void setUsuarioPK(UsuarioPK usuarioPK) {
-        this.usuarioPK = usuarioPK;
     }
 
     public int getId() {
@@ -100,20 +90,13 @@ public class Usuario implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (usuarioPK != null ? usuarioPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Usuario)) {
             return false;
         }
         Usuario other = (Usuario) object;
-        if ((this.usuarioPK == null && other.usuarioPK != null) || (this.usuarioPK != null && !this.usuarioPK.equals(other.usuarioPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -121,7 +104,7 @@ public class Usuario implements Serializable {
 
     @Override
     public String toString() {
-        return "com.trabajojdbc.gestion_bancaria.Usuario[ usuarioPK=" + usuarioPK + " ]";
+        return "com.trabajojdbc.gestion_bancaria.Usuario[ usuarioPK=" + id + " ]";
     }
 
     public String getDni() {

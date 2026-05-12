@@ -7,8 +7,8 @@ package com.trabajojdbc.gestion_bancaria;
 import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -30,8 +30,7 @@ import javax.persistence.Table;
 public class Transacciones implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected TransaccionesPK transaccionesPK;
+    @Id
     @Column(name = "ID")
     private Integer id;
     @Basic(optional = false)
@@ -49,22 +48,13 @@ public class Transacciones implements Serializable {
     public Transacciones() {
     }
 
-    public Transacciones(TransaccionesPK transaccionesPK) {
-        this.transaccionesPK = transaccionesPK;
+    public Transacciones(Integer id) {
+        this.id = id;
     }
 
-    public Transacciones(TransaccionesPK transaccionesPK, double cantidad, String fecha) {
-        this.transaccionesPK = transaccionesPK;
+    public Transacciones(double cantidad, String fecha) {
         this.cantidad = cantidad;
         this.fecha = fecha;
-    }
-
-    public TransaccionesPK getTransaccionesPK() {
-        return transaccionesPK;
-    }
-
-    public void setTransaccionesPK(TransaccionesPK transaccionesPK) {
-        this.transaccionesPK = transaccionesPK;
     }
 
     public Integer getId() {
@@ -100,20 +90,13 @@ public class Transacciones implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (transaccionesPK != null ? transaccionesPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Transacciones)) {
             return false;
         }
         Transacciones other = (Transacciones) object;
-        if ((this.transaccionesPK == null && other.transaccionesPK != null) || (this.transaccionesPK != null && !this.transaccionesPK.equals(other.transaccionesPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -121,7 +104,7 @@ public class Transacciones implements Serializable {
 
     @Override
     public String toString() {
-        return "com.trabajojdbc.gestion_bancaria.Transacciones[ transaccionesPK=" + transaccionesPK + " ]";
+        return "com.trabajojdbc.gestion_bancaria.Transacciones[ transaccionesPK=" + id + " ]";
     }
     
 }

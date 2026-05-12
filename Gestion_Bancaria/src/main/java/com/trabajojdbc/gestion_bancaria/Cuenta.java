@@ -8,8 +8,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -32,11 +32,10 @@ import javax.persistence.Table;
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected CuentaPK cuentaPK;
+    @Id
     @Basic(optional = false)
     @Column(name = "ID")
-    private int id;
+    private Integer id;
     @Basic(optional = false)
     @Column(name = "Numero")
     private int numero;
@@ -55,31 +54,22 @@ public class Cuenta implements Serializable {
     public Cuenta() {
     }
 
-    public Cuenta(CuentaPK cuentaPK) {
-        this.cuentaPK = cuentaPK;
+    public Cuenta(Integer id) {
+        this.id = id;
     }
 
-    public Cuenta(CuentaPK cuentaPK, int id, int numero, String contrasenia, int saldo) {
-        this.cuentaPK = cuentaPK;
+    public Cuenta(Integer id, int numero, String contrasenia, int saldo) {
         this.id = id;
         this.numero = numero;
         this.contrasenia = contrasenia;
         this.saldo = saldo;
     }
 
-    public CuentaPK getCuentaPK() {
-        return cuentaPK;
-    }
-
-    public void setCuentaPK(CuentaPK cuentaPK) {
-        this.cuentaPK = cuentaPK;
-    }
-
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -124,20 +114,13 @@ public class Cuenta implements Serializable {
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash += (cuentaPK != null ? cuentaPK.hashCode() : 0);
-        return hash;
-    }
-
-    @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Cuenta)) {
             return false;
         }
         Cuenta other = (Cuenta) object;
-        if ((this.cuentaPK == null && other.cuentaPK != null) || (this.cuentaPK != null && !this.cuentaPK.equals(other.cuentaPK))) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -145,7 +128,7 @@ public class Cuenta implements Serializable {
 
     @Override
     public String toString() {
-        return "com.trabajojdbc.gestion_bancaria.Cuenta[ cuentaPK=" + cuentaPK + " ]";
+        return "com.trabajojdbc.gestion_bancaria.Cuenta[ cuentaPK=" + id + " ]";
     }
     
 }
