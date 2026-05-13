@@ -497,59 +497,59 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         layout.show(panelContenedor, "pantalla_login");    }//GEN-LAST:event_btnIrLogin1ActionPerformed
 
     private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
-        int numero = -1;
-        numero = parseInt(txtNumeroCrearCuenta.getText());
-        String contrasenia = txtContraseñaCrearCuenta.getText().trim();
-        String dni = txtDNICrearCuenta.getText().trim();
-        String contraseniaCheck = txtConfContraseñaCrearCuenta.getText().trim();
-
-        if (!contrasenia.equals(contraseniaCheck)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "No coinciden las contraseñas, tienen que ser las mismas", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            txtContraseñaCrearCuenta.setText("");
-            txtConfContraseñaCrearCuenta.setText("");
-            return;
-        }
-        if (numero == -1 || dni.isEmpty() || contrasenia.isEmpty() || contraseniaCheck.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son requeridos!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!dniCheck(dni)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
         EntityManager em = EntityManagerUtil.getEntityManager();
-        Integer id = obtenerIdUsuarioPorDni(em, dni);
-        if (id == null) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no corresponde a ninguno de nuestra base de datos, compruebelo de nuevo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            em.close();
-            return;
-        }
-        em.close();
-        Cuenta cuentaNueva = new Cuenta();
-        Usuario propietario = new Usuario(id);
-        cuentaNueva.setIDUsuario(propietario);
-        cuentaNueva.setNumero(numero);
-        cuentaNueva.setContrasenia(BCrypt.hashpw(contrasenia, BCrypt.gensalt()));
-
-        EntityManager em1 = EntityManagerUtil.getEntityManager();
         try {
-            em1.getTransaction().begin();
-            em1.persist(cuentaNueva);
-            em1.getTransaction().commit();
-            javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.");
-            txtNumeroCrearCuenta.setText("");
-            txtContraseñaCrearCuenta.setText("");
-            txtDNICrearCuenta.setText("");
-            txtConfContraseñaCrearCuenta.setText("");
-        } catch (Exception e) {
-            if (em1.getTransaction().isActive()) {
-                em1.getTransaction().rollback();
+            String strNumero = txtNumeroCrearCuenta.getText();
+            String contrasenia = txtContraseñaCrearCuenta.getText().trim();
+            String dni = txtDNICrearCuenta.getText().trim();
+            String contraseniaCheck = txtConfContraseñaCrearCuenta.getText().trim();
+
+            if (!contrasenia.equals(contraseniaCheck)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No coinciden las contraseñas, tienen que ser las mismas", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                txtContraseñaCrearCuenta.setText("");
+                txtConfContraseñaCrearCuenta.setText("");
+                return;
             }
-            if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed (UNIQUE constraint failed: Cuenta.Numero")) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al ejecutar: ESTE NÚMERO ESTA EN USO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            if (strNumero.isEmpty() || dni.isEmpty() || contrasenia.isEmpty() || contraseniaCheck.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son requeridos!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int numero = Integer.parseInt(strNumero);
+            if (!dniCheck(dni)) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            Integer id = obtenerIdUsuarioPorDni(em, dni);
+            if (id == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "El DNI no corresponde a ninguno de nuestra base de datos, compruebelo de nuevo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                em.close();
+                return;
+            }
+            Cuenta cuentaNueva = new Cuenta();
+            Usuario propietario = new Usuario(id);
+            cuentaNueva.setIDUsuario(propietario);
+            cuentaNueva.setNumero(numero);
+            cuentaNueva.setContrasenia(BCrypt.hashpw(contrasenia, BCrypt.gensalt()));
+
+            try {
+                em.getTransaction().begin();
+                em.persist(cuentaNueva);
+                em.getTransaction().commit();
+                javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.");
+                txtNumeroCrearCuenta.setText("");
+                txtContraseñaCrearCuenta.setText("");
+                txtDNICrearCuenta.setText("");
+                txtConfContraseñaCrearCuenta.setText("");
+            } catch (Exception e) {
+                if (em.getTransaction().isActive()) {
+                    em.getTransaction().rollback();
+                }
+                if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed (UNIQUE constraint failed: Cuenta.Numero")) {
+                    javax.swing.JOptionPane.showMessageDialog(this, "Error al ejecutar: ESTE NÚMERO ESTA EN USO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                }
             }
         } finally {
-            em1.close();
+            em.close();
         }
     }//GEN-LAST:event_btnCrearCuentaActionPerformed
 
