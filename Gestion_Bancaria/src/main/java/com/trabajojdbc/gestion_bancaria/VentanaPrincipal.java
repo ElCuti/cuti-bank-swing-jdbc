@@ -398,9 +398,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        mostrar(panelTransacciones);
-        java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
-        layout.show(panelContenedor, "pantalla_transacciones");
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            int numero = Integer.parseInt(txtCuenta.getText());
+            String contrasenia = txtPass.getText().trim();
+
+            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
+
+            if (cuentaEncontrada != null) {
+                if (cuentaEncontrada.getContrasenia().equals(contrasenia)) {
+                    mostrar(panelTransacciones);
+                    java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
+                    layout.show(panelContenedor, "pantalla_transacciones");
+                }
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        } catch (NumberFormatException ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El numero solo puede contener numeros", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } finally {
+            em.close();
+        }
+
+
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
@@ -568,6 +590,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             return usuarioEncontrado.getId();
 
         } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Cuenta buscarCuentaPorNumero(EntityManager em, int numeroBuscar) {
+        try {
+            // Llamamos a la consulta que ya existe en tu Entity
+            return em.createNamedQuery("Cuenta.findByNumero", Cuenta.class)
+                    .setParameter("numero", numeroBuscar)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            // Si no hay ninguna cuenta con ese número, JPA lanza esta excepción
             return null;
         }
     }
