@@ -3,6 +3,7 @@ package com.trabajojdbc.gestion_bancaria;
 import java.awt.Component;
 import static java.lang.Integer.parseInt;
 import javax.persistence.EntityManager;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -411,7 +412,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
 
             if (cuentaEncontrada != null) {
-                if (cuentaEncontrada.getContrasenia().equals(contrasenia)) {
+                if (BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
                     mostrar(panelTransacciones);
                     java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
                     layout.show(panelContenedor, "pantalla_transacciones");
@@ -528,7 +529,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         Usuario propietario = new Usuario(id);
         cuentaNueva.setIDUsuario(propietario);
         cuentaNueva.setNumero(numero);
-        cuentaNueva.setContrasenia(contrasenia);
+        cuentaNueva.setContrasenia(BCrypt.hashpw(contrasenia, BCrypt.gensalt()));
 
         EntityManager em1 = EntityManagerUtil.getEntityManager();
         try {
@@ -564,7 +565,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
 
-            if (cuentaEncontrada != null && cuentaEncontrada.getContrasenia().equals(contrasenia)) {
+            if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
                 em.getTransaction().begin();
                 em.remove(cuentaEncontrada);
                 em.getTransaction().commit();

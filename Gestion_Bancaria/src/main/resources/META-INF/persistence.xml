@@ -5,6 +5,7 @@
     <class>com.trabajojdbc.gestion_bancaria.Cuenta</class>
     <class>com.trabajojdbc.gestion_bancaria.Usuario</class>
     <class>com.trabajojdbc.gestion_bancaria.Transacciones</class>
+    <validation-mode>NONE</validation-mode>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:sqlite:C:\Users\Alumnado\Documents\GitHub\ProyectoJavaJDBC_GestionBancaria\Base de datos/Datos.db"/>
       <property name="javax.persistence.jdbc.user" value=""/>
