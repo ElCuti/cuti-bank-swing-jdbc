@@ -48,13 +48,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         txtNumeroCrearCuenta = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
-        txtContraseñaCrearCuenta = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         txtDNICrearCuenta = new javax.swing.JTextField();
-        txtConfContraseñaCrearCuenta = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         btnCrearCuenta = new javax.swing.JButton();
         btnIrLogin1 = new javax.swing.JButton();
+        txtContraseñaCrearCuenta = new javax.swing.JPasswordField();
+        txtConfContraseñaCrearCuenta = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -327,11 +327,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCrearLayout.createSequentialGroup()
                                 .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(11, 11, 11)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel11)
-                            .addComponent(txtContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCrearLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(txtContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelCrearLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(txtConfContraseñaCrearCuenta))))
                     .addGroup(panelCrearLayout.createSequentialGroup()
                         .addGap(190, 190, 190)
                         .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,7 +342,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(panelCrearLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(btnIrLogin1)))))
-                .addContainerGap(120, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
         panelCrearLayout.setVerticalGroup(
             panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -350,21 +353,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtNumeroCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCrearLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNumeroCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel12))
                     .addGroup(panelCrearLayout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(8, 8, 8)
+                        .addComponent(txtContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearCuenta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -510,6 +513,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             txtContraseñaCrearCuenta.setText("");
             txtDNICrearCuenta.setText("");
             txtConfContraseñaCrearCuenta.setText("");
+        } catch (Exception e) {
+            if (em1.getTransaction().isActive()) {
+                em1.getTransaction().rollback();
+            }
+            if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed (UNIQUE constraint failed: Cuenta.Numero")) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Error al ejecutar: ESTE NÚMERO ESTA EN USO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
         } finally {
             em1.close();
         }
@@ -592,8 +602,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel panelTransacciones;
     private javax.swing.JTextField txtApellidoCrear;
     private javax.swing.JLabel txtBienvenida;
-    private javax.swing.JTextField txtConfContraseñaCrearCuenta;
-    private javax.swing.JTextField txtContraseñaCrearCuenta;
+    private javax.swing.JPasswordField txtConfContraseñaCrearCuenta;
+    private javax.swing.JPasswordField txtContraseñaCrearCuenta;
     private javax.swing.JTextField txtCuenta;
     private javax.swing.JTextField txtDNICrear;
     private javax.swing.JTextField txtDNICrearCuenta;
