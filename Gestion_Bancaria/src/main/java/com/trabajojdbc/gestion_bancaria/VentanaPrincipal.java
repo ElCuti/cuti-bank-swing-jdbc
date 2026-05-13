@@ -1,6 +1,7 @@
 package com.trabajojdbc.gestion_bancaria;
 
 import java.awt.Component;
+import static java.lang.Integer.parseInt;
 import javax.persistence.EntityManager;
 
 /**
@@ -276,6 +277,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel9.setText("Numero");
 
+        txtNumeroCrearCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNumeroCrearCuentaActionPerformed(evt);
+            }
+        });
+
         jLabel10.setText("Contraseña");
 
         jLabel12.setText("DNI");
@@ -283,6 +290,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel11.setText("Confirmar Contraseña");
 
         btnCrearCuenta.setText("CREAR CUENTA");
+        btnCrearCuenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCrearCuentaActionPerformed(evt);
+            }
+        });
 
         btnIrLogin1.setText("IR AL LOGIN");
         btnIrLogin1.addActionListener(new java.awt.event.ActionListener() {
@@ -312,7 +324,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(panelCrearLayout.createSequentialGroup()
                                 .addGap(45, 45, 45)
                                 .addComponent(jLabel12))
-                            .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCrearLayout.createSequentialGroup()
+                                .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel11)
@@ -343,14 +357,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelCrearLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel12))
                     .addGroup(panelCrearLayout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(18, 18, 18)
                 .addComponent(btnCrearCuenta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -395,7 +409,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "El Nombre y el DNI son campos obligatorios", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-
+        if (!dniCheck(dni)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         Usuario nuevoUsuario = new Usuario();
         nuevoUsuario.setNombre(nombre);
         nuevoUsuario.setApellido(apellido);
@@ -448,6 +465,60 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_login");    }//GEN-LAST:event_btnIrLogin1ActionPerformed
 
+    private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
+        int numero = -1;
+        numero = parseInt(txtNumeroCrearCuenta.getText());
+        String contrasenia = txtContraseñaCrearCuenta.getText().trim();
+        String dni = txtDNICrearCuenta.getText().trim();
+        String contraseniaCheck = txtConfContraseñaCrearCuenta.getText().trim();
+
+        if (!contrasenia.equals(contraseniaCheck)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "No coinciden las contraseñas, tienen que ser las mismas", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            txtContraseñaCrearCuenta.setText("");
+            txtConfContraseñaCrearCuenta.setText("");
+            return;
+        }
+        if (numero == -1 || dni.isEmpty() || contrasenia.isEmpty() || contraseniaCheck.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son requeridos!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!dniCheck(dni)) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        Integer id = obtenerIdUsuarioPorDni(em, dni);
+        if (id == null) {
+            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no corresponde a ninguno de nuestra base de datos, compruebelo de nuevo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            em.close();
+            return;
+        }
+        em.close();
+        Cuenta cuentaNueva = new Cuenta();
+        Usuario propietario = new Usuario(id);
+        cuentaNueva.setIDUsuario(propietario);
+        cuentaNueva.setNumero(numero);
+        cuentaNueva.setContrasenia(contrasenia);
+
+        EntityManager em1 = EntityManagerUtil.getEntityManager();
+        try {
+            em1.getTransaction().begin();
+            em1.persist(cuentaNueva);
+            em1.getTransaction().commit();
+            javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.");
+            txtNumeroCrearCuenta.setText("");
+            txtContraseñaCrearCuenta.setText("");
+            txtDNICrearCuenta.setText("");
+            txtConfContraseñaCrearCuenta.setText("");
+        } finally {
+            em1.close();
+        }
+    }//GEN-LAST:event_btnCrearCuentaActionPerformed
+
+    private void txtNumeroCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumeroCrearCuentaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNumeroCrearCuentaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -470,6 +541,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenedor.add(comp);
         panelContenedor.repaint();
         panelContenedor.revalidate();
+    }
+
+    public boolean dniCheck(String dni) {
+        if (dni == null || dni.trim().isEmpty()) {
+            return false;
+        }
+        return dni.matches("^[0-9]{8}[A-Z]$"); //Aplicación de Regex
+    }
+
+    public Integer obtenerIdUsuarioPorDni(EntityManager em, String dniABuscar) {
+        try {
+            Usuario usuarioEncontrado = em.createNamedQuery("Usuario.findByDni", Usuario.class)
+                    .setParameter("dni", dniABuscar)
+                    .getSingleResult();
+            return usuarioEncontrado.getId();
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
