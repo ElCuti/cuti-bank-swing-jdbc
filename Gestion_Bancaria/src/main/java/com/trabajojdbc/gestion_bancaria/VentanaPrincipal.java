@@ -74,6 +74,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel3.setText("Introduzca su numero de cuenta y su contraseña para acceder a su cuenta");
 
         btnBorrar.setText("BORRAR");
+        btnBorrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarActionPerformed(evt);
+            }
+        });
 
         btnRegistrar.setText("REGISTRARME");
         btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,7 +139,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEntrar)
                     .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -417,7 +422,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
 
         } catch (NumberFormatException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El numero solo puede contener numeros", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            javax.swing.JOptionPane.showMessageDialog(this, "Error, compruebe que has introducido todos los datos necesarios y correctamente", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         } finally {
             em.close();
         }
@@ -551,6 +556,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNumeroCrearCuentaActionPerformed
 
+    private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            int numero = Integer.parseInt(txtCuenta.getText());
+            String contrasenia = txtPass.getText().trim();
+
+            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
+
+            if (cuentaEncontrada != null && cuentaEncontrada.getContrasenia().equals(contrasenia)) {
+                em.getTransaction().begin();
+                em.remove(cuentaEncontrada);
+                em.getTransaction().commit();
+                javax.swing.JOptionPane.showMessageDialog(this, "Cuenta borrada con exito!", "Borrado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+            }
+
+        } catch (NumberFormatException ex) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            javax.swing.JOptionPane.showMessageDialog(this, "Error, compruebe que has introducido todos los datos necesarios y correctamente", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } finally {
+            em.close();
+        }
+    }//GEN-LAST:event_btnBorrarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -596,13 +629,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     public Cuenta buscarCuentaPorNumero(EntityManager em, int numeroBuscar) {
         try {
-            // Llamamos a la consulta que ya existe en tu Entity
             return em.createNamedQuery("Cuenta.findByNumero", Cuenta.class)
                     .setParameter("numero", numeroBuscar)
                     .getSingleResult();
 
         } catch (Exception e) {
-            // Si no hay ninguna cuenta con ese número, JPA lanza esta excepción
             return null;
         }
     }
