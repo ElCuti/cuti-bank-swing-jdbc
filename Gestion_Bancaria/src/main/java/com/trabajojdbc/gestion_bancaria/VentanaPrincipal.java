@@ -2,6 +2,7 @@ package com.trabajojdbc.gestion_bancaria;
 
 import java.awt.Component;
 import static java.lang.Integer.parseInt;
+import java.util.Date;
 import javax.persistence.EntityManager;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -33,8 +34,19 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelTransacciones = new javax.swing.JPanel();
         txtBienvenida = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaMovimientos = new javax.swing.JTable();
+        jLabel14 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        txtNumR = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        txtCantidad = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
+        txtComentario = new javax.swing.JTextField();
+        btnEnviarTransaccion = new javax.swing.JButton();
         panelRegistrar = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -125,7 +137,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel2))
                             .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(103, Short.MAX_VALUE))
         );
         panelLoginLayout.setVerticalGroup(
             panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,35 +172,147 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Enviar");
-
         jLabel13.setText("Tu saldo actual es de :");
+
+        tablaMovimientos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Tipo", "Cantidad", "Fecha", "Numero de Cuenta"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tablaMovimientos);
+
+        jLabel14.setText("Tus ultimos movimientos");
+
+        jPanel1.setBorder(new javax.swing.border.MatteBorder(null));
+
+        jLabel15.setText("Transacción");
+
+        jLabel16.setText("Número de cuenta:");
+
+        txtNumR.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNumRActionPerformed(evt);
+            }
+        });
+
+        jLabel17.setText("Cantidad a enviar");
+
+        jLabel18.setText("Comentario:");
+
+        btnEnviarTransaccion.setText("Enviar");
+        btnEnviarTransaccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarTransaccionActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(70, 70, 70)
+                                .addComponent(jLabel15)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel16)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                                .addComponent(txtNumR, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addComponent(btnEnviarTransaccion)))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jLabel15)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNumR, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17)
+                    .addComponent(txtCantidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel18)
+                    .addComponent(txtComentario, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(btnEnviarTransaccion)
+                .addGap(18, 18, 18))
+        );
 
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
         panelTransaccionesLayout.setHorizontalGroup(
             panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(29, 29, 29)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(jButton1)
                     .addComponent(btnExit)
-                    .addComponent(txtBienvenida))
-                .addContainerGap(338, Short.MAX_VALUE))
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtBienvenida)
+                                    .addComponent(jLabel13))))
+                        .addGap(30, 30, 30)
+                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel14)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         panelTransaccionesLayout.setVerticalGroup(
             panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(txtBienvenida)
-                .addGap(35, 35, 35)
-                .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
+                        .addGap(2, 2, 2)))
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnExit)
-                .addGap(30, 30, 30))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelTransacciones, "pantalla_transacciones\n\n");
@@ -241,7 +365,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addGroup(panelRegistrarLayout.createSequentialGroup()
                         .addGap(206, 206, 206)
                         .addComponent(jLabel6)))
-                .addContainerGap(179, Short.MAX_VALUE))
+                .addContainerGap(229, Short.MAX_VALUE))
             .addGroup(panelRegistrarLayout.createSequentialGroup()
                 .addGroup(panelRegistrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelRegistrarLayout.createSequentialGroup()
@@ -278,7 +402,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnCrearUsuario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnIrLogin)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelRegistrar, "panel_registrar");
@@ -352,7 +476,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addGroup(panelCrearLayout.createSequentialGroup()
                                 .addGap(6, 6, 6)
                                 .addComponent(btnIrLogin1)))))
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
         panelCrearLayout.setVerticalGroup(
             panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -382,7 +506,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnCrearCuenta)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnIrLogin1)
-                .addContainerGap(96, Short.MAX_VALUE))
+                .addContainerGap(138, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelCrear, "panel_crear");
@@ -423,7 +547,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 txtCuenta.setText("");
                 txtPass.setText("");
                 txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
-                jLabel13.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo()+"€");
+                jLabel13.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo() + "€");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 
@@ -592,6 +716,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
+    private void txtNumRActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNumRActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNumRActionPerformed
+
+    private void btnEnviarTransaccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTransaccionActionPerformed
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            int numeroEnviar = Integer.parseInt(txtNumR.getText());
+            int cantidad = Integer.parseInt(txtCantidad.getText());
+            String comentario = txtComentario.getText().trim();
+
+            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numeroEnviar);
+            if (cuentaEncontrada != null) {
+                em.getTransaction().begin();
+                em.getTransaction().commit();
+                javax.swing.JOptionPane.showMessageDialog(this, "Transacción enviada con exito!", "Transacción", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la cantidad no son correctos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+            }
+        } catch (Exception e) {
+
+        } finally {
+            em.close();
+        }
+    }//GEN-LAST:event_btnEnviarTransaccionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -652,16 +803,21 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnCrearCuenta;
     private javax.swing.JButton btnCrearUsuario;
     private javax.swing.JButton btnEntrar;
+    private javax.swing.JButton btnEnviarTransaccion;
     private javax.swing.JButton btnExit;
     private javax.swing.JButton btnIrLogin;
     private javax.swing.JButton btnIrLogin1;
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -670,18 +826,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel panelContenedor;
     private javax.swing.JPanel panelCrear;
     private javax.swing.JPanel panelLogin;
     private javax.swing.JPanel panelRegistrar;
     private javax.swing.JPanel panelTransacciones;
+    private javax.swing.JTable tablaMovimientos;
     private javax.swing.JTextField txtApellidoCrear;
     private javax.swing.JLabel txtBienvenida;
+    private javax.swing.JTextField txtCantidad;
+    private javax.swing.JTextField txtComentario;
     private javax.swing.JPasswordField txtConfContraseñaCrearCuenta;
     private javax.swing.JPasswordField txtContraseñaCrearCuenta;
     private javax.swing.JTextField txtCuenta;
     private javax.swing.JTextField txtDNICrear;
     private javax.swing.JTextField txtDNICrearCuenta;
+    private javax.swing.JTextField txtNumR;
     private javax.swing.JTextField txtNumeroCrearCuenta;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtUsuarioCrear;
