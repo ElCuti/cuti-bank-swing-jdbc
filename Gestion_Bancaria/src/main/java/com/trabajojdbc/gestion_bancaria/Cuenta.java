@@ -44,7 +44,7 @@ public class Cuenta implements Serializable {
     private String contrasenia;
     @Basic(optional = false)
     @Column(name = "Saldo")
-    private int saldo;
+    private int saldo = 0;
     @OneToMany(mappedBy = "cuenta")
     private Collection<Transacciones> transaccionesCollection;
     @JoinColumn(name = "ID_Usuario", referencedColumnName = "ID")

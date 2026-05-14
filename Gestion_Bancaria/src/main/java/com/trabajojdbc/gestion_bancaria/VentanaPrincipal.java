@@ -34,6 +34,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         txtBienvenida = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
         panelRegistrar = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -152,8 +153,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         panelContenedor.add(panelLogin, "pantalla_login");
 
-        txtBienvenida.setText("m");
-
         btnExit.setText("Salir");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -163,6 +162,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jButton1.setText("Enviar");
 
+        jLabel13.setText("Tu saldo actual es de :");
+
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
         panelTransaccionesLayout.setHorizontalGroup(
@@ -170,17 +171,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13)
                     .addComponent(jButton1)
                     .addComponent(btnExit)
                     .addComponent(txtBienvenida))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(338, Short.MAX_VALUE))
         );
         panelTransaccionesLayout.setVerticalGroup(
             panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(21, 21, 21)
                 .addComponent(txtBienvenida)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 217, Short.MAX_VALUE)
+                .addGap(35, 35, 35)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 189, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnExit)
@@ -411,12 +415,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
 
-            if (cuentaEncontrada != null) {
-                if (BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
-                    mostrar(panelTransacciones);
-                    java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
-                    layout.show(panelContenedor, "pantalla_transacciones");
-                }
+            if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
+                mostrar(panelTransacciones);
+                java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
+                layout.show(panelContenedor, "pantalla_transacciones");
+                Usuario propietario = cuentaEncontrada.getIDUsuario();
+                txtCuenta.setText("");
+                txtPass.setText("");
+                txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
+                jLabel13.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo()+"€");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 
@@ -654,6 +661,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
