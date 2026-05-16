@@ -39,11 +39,14 @@ public class Transacciones implements Serializable {
     @Basic(optional = false)
     @Column(name = "Fecha")
     private String fecha;
-    @JoinColumns({
-        @JoinColumn(name = "ID_CuentaR", referencedColumnName = "ID"),
-        @JoinColumn(name = "ID_CuentaE", referencedColumnName = "ID")})
-    @ManyToOne
-    private Cuenta cuenta;
+    @JoinColumn(name = "ID_CuentaE", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Cuenta cuentaEmisor;
+    @JoinColumn(name = "ID_CuentaR", referencedColumnName = "ID")
+    @ManyToOne(optional = false)
+    private Cuenta cuentaReceptor;
+    @Column(name = "Comentario")
+    private String comentario;
 
     public Transacciones() {
     }
@@ -81,14 +84,6 @@ public class Transacciones implements Serializable {
         this.fecha = fecha;
     }
 
-    public Cuenta getCuenta() {
-        return cuenta;
-    }
-
-    public void setCuenta(Cuenta cuenta) {
-        this.cuenta = cuenta;
-    }
-
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -106,5 +101,29 @@ public class Transacciones implements Serializable {
     public String toString() {
         return "com.trabajojdbc.gestion_bancaria.Transacciones[ transaccionesPK=" + id + " ]";
     }
-    
+
+    public Cuenta getCuentaEmisor() {
+        return cuentaEmisor;
+    }
+
+    public void setCuentaEmisor(Cuenta cuentaEmisor) {
+        this.cuentaEmisor = cuentaEmisor;
+    }
+
+    public Cuenta getCuentaReceptor() {
+        return cuentaReceptor;
+    }
+
+    public void setCuentaReceptor(Cuenta cuentaReceptor) {
+        this.cuentaReceptor = cuentaReceptor;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
 }
