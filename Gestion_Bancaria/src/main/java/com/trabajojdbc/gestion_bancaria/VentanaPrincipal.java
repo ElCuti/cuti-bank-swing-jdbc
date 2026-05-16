@@ -1,5 +1,7 @@
 package com.trabajojdbc.gestion_bancaria;
 
+import com.trabajojdbc.gestion_bancaria.util.ValidacionUtil;
+import com.trabajojdbc.gestion_bancaria.repository.BancoRepository;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
@@ -124,7 +126,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setIcon(new javax.swing.ImageIcon("C:\\Users\\jc324\\Documents\\GitHub\\ProyectoJavaJDBC_GestionBancaria\\imagenes\\logo.png")); // NOI18N
+        jLabel13.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout panelLoginLayout = new javax.swing.GroupLayout(panelLogin);
         panelLogin.setLayout(panelLoginLayout);
@@ -296,7 +298,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGap(18, 18, 18))
         );
 
-        jLabel19.setIcon(new javax.swing.ImageIcon("C:\\Users\\jc324\\Documents\\GitHub\\ProyectoJavaJDBC_GestionBancaria\\imagenes\\logo.png")); // NOI18N
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
@@ -375,7 +377,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel22.setIcon(new javax.swing.ImageIcon("C:\\Users\\jc324\\Documents\\GitHub\\ProyectoJavaJDBC_GestionBancaria\\imagenes\\logo.png")); // NOI18N
+        jLabel22.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout panelRegistrarLayout = new javax.swing.GroupLayout(panelRegistrar);
         panelRegistrar.setLayout(panelRegistrarLayout);
@@ -475,7 +477,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel20.setIcon(new javax.swing.ImageIcon("C:\\Users\\jc324\\Documents\\GitHub\\ProyectoJavaJDBC_GestionBancaria\\imagenes\\logo.png")); // NOI18N
+        jLabel20.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout panelCrearLayout = new javax.swing.GroupLayout(panelCrear);
         panelCrear.setLayout(panelCrearLayout);
@@ -584,7 +586,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             int numero = Integer.parseInt(txtCuenta.getText());
             String contrasenia = txtPass.getText().trim();
 
-            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
+            Cuenta cuentaEncontrada = BancoRepository.buscarCuentaPorNumero(em, numero);
 
             if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
                 this.cuentaActiva = cuentaEncontrada;
@@ -620,7 +622,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             javax.swing.JOptionPane.showMessageDialog(this, "El Nombre y el DNI son campos obligatorios", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!dniCheck(dni)) {
+        if (!ValidacionUtil.dniCheck(dni)) {
             javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -695,11 +697,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 return;
             }
             int numero = Integer.parseInt(strNumero);
-            if (!dniCheck(dni)) {
+            if (!ValidacionUtil.dniCheck(dni)) {
                 javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            Integer id = obtenerIdUsuarioPorDni(em, dni);
+            Integer id = BancoRepository.obtenerIdUsuarioPorDni(em, dni);
             if (id == null) {
                 javax.swing.JOptionPane.showMessageDialog(this, "El DNI no corresponde a ninguno de nuestra base de datos, compruebelo de nuevo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 em.close();
@@ -743,7 +745,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             int numero = Integer.parseInt(txtCuenta.getText());
             String contrasenia = txtPass.getText().trim();
 
-            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
+            Cuenta cuentaEncontrada = BancoRepository.buscarCuentaPorNumero(em, numero);
 
             if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
                 em.getTransaction().begin();
@@ -776,7 +778,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             int cantidad = Integer.parseInt(txtCantidad.getText());
             String comentario = txtComentario.getText().trim();
             Cuenta cuentaOrigen = em.find(Cuenta.class, this.cuentaActiva.getId());
-            Cuenta cuentaDestino = buscarCuentaPorNumero(em, numeroEnviar);
+            Cuenta cuentaDestino = BancoRepository.buscarCuentaPorNumero(em, numeroEnviar);
             if (cantidad <= 0) {
                 javax.swing.JOptionPane.showMessageDialog(this, "La cantidad a enviar debe ser mayor a 0.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                 return;
@@ -853,48 +855,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelContenedor.revalidate();
     }
 
-    public boolean dniCheck(String dni) {
-        if (dni == null || dni.trim().isEmpty()) {
-            return false;
-        }
-        return dni.matches("^[0-9]{8}[A-Z]$"); //Aplicación de Regex
-    }
-
-    public Integer obtenerIdUsuarioPorDni(EntityManager em, String dniABuscar) {
-        try {
-            Usuario usuarioEncontrado = em.createNamedQuery("Usuario.findByDni", Usuario.class)
-                    .setParameter("dni", dniABuscar)
-                    .getSingleResult();
-            return usuarioEncontrado.getId();
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public Cuenta buscarCuentaPorNumero(EntityManager em, int numeroBuscar) {
-        try {
-            return em.createNamedQuery("Cuenta.findByNumero", Cuenta.class)
-                    .setParameter("numero", numeroBuscar)
-                    .getSingleResult();
-
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public void actualizarTablaMovimientos() {
         if (this.cuentaActiva == null) {
             return;
         }
         EntityManager em = EntityManagerUtil.getEntityManager();
-        try {
-            List<Transacciones> ultimosMovimientos = em.createQuery(
-                    "SELECT t FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId ORDER BY t.id DESC",
-                    Transacciones.class)
-                    .setParameter("miId", this.cuentaActiva.getId())
-                    .setMaxResults(5)
-                    .getResultList();
+        try{
+        List<Transacciones> ultimosMovimientos = BancoRepository.obtenerUltimosMovimientos(this.cuentaActiva.getId());
 
             DefaultTableModel modelo = (DefaultTableModel) tablaMovimientos.getModel();
             modelo.setRowCount(0);
