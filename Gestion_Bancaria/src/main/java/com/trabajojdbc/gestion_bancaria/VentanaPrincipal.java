@@ -12,6 +12,8 @@ import org.mindrot.jbcrypt.BCrypt;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
+    private Cuenta cuentaActiva = null;
+
     public VentanaPrincipal() {
         initComponents();
     }
@@ -34,7 +36,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelTransacciones = new javax.swing.JPanel();
         txtBienvenida = new javax.swing.JLabel();
         btnExit = new javax.swing.JButton();
-        jLabel13 = new javax.swing.JLabel();
+        txtSaldo = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaMovimientos = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
@@ -172,7 +174,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setText("Tu saldo actual es de :");
+        txtSaldo.setText("Tu saldo actual es de :");
 
         tablaMovimientos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -286,7 +288,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addGap(8, 8, 8)
                                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtBienvenida)
-                                    .addComponent(jLabel13))))
+                                    .addComponent(txtSaldo))))
                         .addGap(30, 30, 30)
                         .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14)
@@ -301,7 +303,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addGap(35, 35, 35)
-                        .addComponent(jLabel13)
+                        .addComponent(txtSaldo)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -526,6 +528,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        this.cuentaActiva = null;
         mostrar(panelLogin);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_login");
@@ -540,6 +543,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numero);
 
             if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
+                this.cuentaActiva = cuentaEncontrada;
                 mostrar(panelTransacciones);
                 java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
                 layout.show(panelContenedor, "pantalla_transacciones");
@@ -547,7 +551,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 txtCuenta.setText("");
                 txtPass.setText("");
                 txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
-                jLabel13.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo() + "€");
+                txtSaldo.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo() + "€");
             } else {
                 javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 
@@ -726,16 +730,52 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             int numeroEnviar = Integer.parseInt(txtNumR.getText());
             int cantidad = Integer.parseInt(txtCantidad.getText());
             String comentario = txtComentario.getText().trim();
-
-            Cuenta cuentaEncontrada = buscarCuentaPorNumero(em, numeroEnviar);
-            if (cuentaEncontrada != null) {
-                em.getTransaction().begin();
-                em.getTransaction().commit();
-                javax.swing.JOptionPane.showMessageDialog(this, "Transacción enviada con exito!", "Transacción", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la cantidad no son correctos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-
+            Cuenta cuentaOrigen = em.find(Cuenta.class, this.cuentaActiva.getId());
+            Cuenta cuentaDestino = buscarCuentaPorNumero(em, numeroEnviar);
+            if (cantidad <= 0) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La cantidad a enviar debe ser mayor a 0.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            if (cuentaDestino == null) {
+                javax.swing.JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (cuentaOrigen.getId() == cuentaDestino.getId()) {
+                javax.swing.JOptionPane.showMessageDialog(this, "No puedes enviarte dinero a ti mismo.", "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            if (cuentaOrigen.getSaldo() < cantidad) {
+                javax.swing.JOptionPane.showMessageDialog(this, "Saldo insuficiente para realizar la transacción.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                    this, "¿Estás seguro de que quieres enviar " + cantidad + "€ a la cuenta número " + numeroEnviar + "?", "Confirmar Transferencia", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
+                return;
+            }
+            em.getTransaction().begin();
+
+            cuentaOrigen.setSaldo(cuentaOrigen.getSaldo() - cantidad);
+            cuentaDestino.setSaldo(cuentaDestino.getSaldo() + cantidad);
+
+            Transacciones nuevoMovimiento = new Transacciones();
+            nuevoMovimiento.setCantidad(cantidad);
+            nuevoMovimiento.setComentario(comentario);
+            nuevoMovimiento.setCuentaEmisor(cuentaOrigen);
+            nuevoMovimiento.setCuentaReceptor(cuentaDestino);
+
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            nuevoMovimiento.setFecha(sdf.format(new java.util.Date()));
+
+            em.persist(nuevoMovimiento);
+            em.getTransaction().commit();
+            txtNumR.setText("");
+            txtCantidad.setText("");
+            txtComentario.setText("");
+            txtSaldo.setText("Tu saldo actual es de " + cuentaOrigen.getSaldo() + "€");
+            javax.swing.JOptionPane.showMessageDialog(this, "¡Transacción enviada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
         } catch (Exception e) {
 
         } finally {
@@ -812,7 +852,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
@@ -846,6 +885,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JTextField txtNumR;
     private javax.swing.JTextField txtNumeroCrearCuenta;
     private javax.swing.JPasswordField txtPass;
+    private javax.swing.JLabel txtSaldo;
     private javax.swing.JTextField txtUsuarioCrear;
     // End of variables declaration//GEN-END:variables
 }

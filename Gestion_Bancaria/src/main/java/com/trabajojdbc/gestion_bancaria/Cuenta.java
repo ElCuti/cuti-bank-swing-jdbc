@@ -32,21 +32,30 @@ import javax.persistence.Table;
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
     @Id
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
+    
     @Basic(optional = false)
     @Column(name = "Numero")
     private int numero;
+    
     @Basic(optional = false)
     @Column(name = "Contrasenia")
     private String contrasenia;
+    
     @Basic(optional = false)
     @Column(name = "Saldo")
     private int saldo = 0;
-    @OneToMany(mappedBy = "cuenta")
-    private Collection<Transacciones> transaccionesCollection;
+    
+    @OneToMany(mappedBy = "cuentaEmisor")
+    private Collection<Transacciones> transferenciasEnviadas;
+
+    @OneToMany(mappedBy = "cuentaReceptor")
+    private Collection<Transacciones> transferenciasRecibidas;
+    
     @JoinColumn(name = "ID_Usuario", referencedColumnName = "ID")
     @ManyToOne
     private Usuario iDUsuario;
@@ -97,20 +106,28 @@ public class Cuenta implements Serializable {
         this.saldo = saldo;
     }
 
-    public Collection<Transacciones> getTransaccionesCollection() {
-        return transaccionesCollection;
-    }
-
-    public void setTransaccionesCollection(Collection<Transacciones> transaccionesCollection) {
-        this.transaccionesCollection = transaccionesCollection;
-    }
-
     public Usuario getIDUsuario() {
         return iDUsuario;
     }
 
     public void setIDUsuario(Usuario iDUsuario) {
         this.iDUsuario = iDUsuario;
+    }
+
+    public Collection<Transacciones> getTransferenciasEnviadas() {
+        return transferenciasEnviadas;
+    }
+
+    public void setTransferenciasEnviadas(Collection<Transacciones> transferenciasEnviadas) {
+        this.transferenciasEnviadas = transferenciasEnviadas;
+    }
+
+    public Collection<Transacciones> getTransferenciasRecibidas() {
+        return transferenciasRecibidas;
+    }
+
+    public void setTransferenciasRecibidas(Collection<Transacciones> transferenciasRecibidas) {
+        this.transferenciasRecibidas = transferenciasRecibidas;
     }
 
     @Override
