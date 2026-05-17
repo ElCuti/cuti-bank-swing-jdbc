@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import org.mindrot.jbcrypt.BCrypt;
+import java.util.UUID;
 
 /**
  *
@@ -36,7 +37,8 @@ public class BancoService {
 
             if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
                 em.getTransaction().begin();
-                em.remove(cuentaEncontrada);
+                cuentaEncontrada.setContrasenia(BCrypt.hashpw("CUENTA_BAJA_" + UUID.randomUUID().toString(), BCrypt.gensalt()));
+                cuentaEncontrada.setSaldo(0);
                 em.getTransaction().commit();
             } else {
                 throw new Exception("El número de cuenta o la contraseña son incorrectos.");
@@ -51,8 +53,12 @@ public class BancoService {
         }
     }
 
-    public List<Transacciones> obtenerUltimosMovimientos(int cuentaId) {
-        return BancoRepository.obtenerUltimosMovimientos(cuentaId);
+    public List<Transacciones> obtenerMovimientosPaginados(int cuentaId, int pagina, int tamanoPagina) {
+        return BancoRepository.obtenerMovimientosPaginados(cuentaId, pagina, tamanoPagina);
+    }
+
+    public long contarTotalMovimientos(int cuentaId) {
+        return BancoRepository.contarTotalMovimientos(cuentaId);
     }
 
     public void crearUsuario(String nombre, String apellido, String dni) throws Exception {

@@ -67,18 +67,50 @@ public class BancoRepository {
      * reciente a la más antigua. Si hay un error o no hay transacciones,
      * devuelve una lista vacía.
      */
-    public static List<Transacciones> obtenerUltimosMovimientos(int cuentaId) {
+    public static List<Transacciones> obtenerMovimientosPaginados(int cuentaId, int pagina, int tamanoPagina) {
         EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            // Creamos una query para sacar las 5 ultimas transacciones de un ID y lo metemos en una lista
-            return em.createQuery(
+            // 1. Usamos el JPQL original que FUNCIONA y mapea las cuentas perfectamente
+            List<Transacciones> todasLasTransacciones = em.createQuery(
                     "SELECT t FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId ORDER BY t.id DESC",
                     Transacciones.class)
                     .setParameter("miId", cuentaId)
-                    .setMaxResults(5)
                     .getResultList();
+
+            // 2. Hacemos la paginación matemáticamente usando Java (subList)
+            int inicio = pagina * tamanoPagina;
+            // Evitamos pasarnos del límite si la última página tiene menos de 5 transacciones
+            int fin = Math.min(inicio + tamanoPagina, todasLasTransacciones.size());
+
+            // Si por algún casual pedimos una página que no existe
+            if (inicio >= todasLasTransacciones.size()) {
+                return Collections.emptyList();
+            }
+
+            // 3. Devolvemos "el recorte" de la lista
+            return todasLasTransacciones.subList(inicio, fin);
+
         } catch (Exception e) {
+            e.printStackTrace();
             return Collections.emptyList();
+        } finally {
+            if (em != null && em.isOpen()) {
+                em.close();
+            }
+        }
+    }
+
+    public static long contarTotalMovimientos(int cuentaId) {
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            return em.createQuery(
+                    "SELECT COUNT(t.id) FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId",
+                    Long.class)
+                    .setParameter("miId", cuentaId)
+                    .getSingleResult();
+        } catch (Exception e) {
+            System.err.println("Error contando movimientos: " + e.getMessage());
+            return 0;
         } finally {
             if (em != null && em.isOpen()) {
                 em.close();

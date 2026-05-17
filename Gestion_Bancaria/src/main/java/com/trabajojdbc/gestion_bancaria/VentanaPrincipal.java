@@ -16,6 +16,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private Cuenta cuentaActiva = null;
     private BancoService bancoService = new BancoService();
+    private int paginaActual = 0;
+    private final int TAMANO_PAGINA = 5;
 
     public VentanaPrincipal() {
         initComponents();
@@ -60,6 +62,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         btnEnviarTransaccion = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
         btnCambiarContrasenia = new javax.swing.JButton();
+        btnSiguiente = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
+        lblPagina = new javax.swing.JLabel();
         panelRegistrar = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -301,6 +306,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        btnSiguiente.setText("Siguiente >");
+        btnSiguiente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguienteActionPerformed(evt);
+            }
+        });
+
+        btnAnterior.setText("< Anterior");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
+        lblPagina.setText("Página 1");
+
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
         panelTransaccionesLayout.setHorizontalGroup(
@@ -322,10 +343,18 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addComponent(btnCambiarContrasenia)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
+                                    .addComponent(jLabel14)
+                                    .addGap(207, 207, 207)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
-                                .addComponent(jLabel14)
-                                .addGap(207, 207, 207))))
+                                .addComponent(btnAnterior)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblPagina)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnSiguiente)
+                                .addGap(6, 6, 6))))
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addGap(103, 103, 103)
                         .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -344,6 +373,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnSiguiente)
+                            .addComponent(btnAnterior)
+                            .addComponent(lblPagina))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -606,6 +640,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
             txtSaldo.setText("Tu saldo actual es de " + cuentaLogueada.getSaldo() + "€");
 
+            this.paginaActual = 0;
             actualizarTablaMovimientos();
 
         } catch (NumberFormatException ex) {
@@ -784,6 +819,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCambiarContraseniaActionPerformed
 
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        if (paginaActual > 0) {
+            paginaActual--;
+            actualizarTablaMovimientos();
+        }
+    }//GEN-LAST:event_btnAnteriorActionPerformed
+
+    private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
+        try {
+            // Recalculamos el total de páginas para asegurarnos de que el avance es legal
+            long totalMovimientos = bancoService.contarTotalMovimientos(this.cuentaActiva.getId());
+            int totalPaginas = (int) Math.ceil((double) totalMovimientos / TAMANO_PAGINA);
+            if (totalPaginas == 0) {
+                totalPaginas = 1;
+            }
+
+            // REGLA DE ORO: Solo sumamos si la página actual es menor que la última página
+            if (paginaActual < totalPaginas - 1) {
+                paginaActual++;
+                actualizarTablaMovimientos();
+            }
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_btnSiguienteActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -814,27 +874,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
 
         try {
-            List<Transacciones> ultimosMovimientos = bancoService.obtenerUltimosMovimientos(this.cuentaActiva.getId());
+            List<Transacciones> movimientos = bancoService.obtenerMovimientosPaginados(this.cuentaActiva.getId(), paginaActual, TAMANO_PAGINA);
+            long totalMovimientos = bancoService.contarTotalMovimientos(this.cuentaActiva.getId());
 
             DefaultTableModel modelo = (DefaultTableModel) tablaMovimientos.getModel();
             modelo.setRowCount(0);
 
-            for (Transacciones transaccion : ultimosMovimientos) {
+            for (Transacciones transaccion : movimientos) {
                 String tipo;
-                int numeroRelacionado;
+                String numeroRelacionadoStr = "N/A"; // Por si es un ingreso del banco y no hay otra cuenta
 
-                if (transaccion.getCuentaEmisor().getId() == this.cuentaActiva.getId()) {
+                // Comprobamos de forma segura si somos el emisor (evitando el NullPointerException)
+                if (transaccion.getCuentaEmisor() != null && transaccion.getCuentaEmisor().getId() == this.cuentaActiva.getId()) {
                     tipo = "Enviado";
-                    numeroRelacionado = transaccion.getCuentaReceptor().getNumero();
+                    if (transaccion.getCuentaReceptor() != null) {
+                        numeroRelacionadoStr = String.valueOf(transaccion.getCuentaReceptor().getNumero());
+                    }
                 } else {
                     tipo = "Recibido";
-                    numeroRelacionado = transaccion.getCuentaEmisor().getNumero();
+                    if (transaccion.getCuentaEmisor() != null) {
+                        numeroRelacionadoStr = String.valueOf(transaccion.getCuentaEmisor().getNumero());
+                    }
                 }
+
                 modelo.addRow(new Object[]{
                     tipo,
                     transaccion.getCantidad() + "€",
                     transaccion.getFecha(),
-                    numeroRelacionado
+                    numeroRelacionadoStr
                 });
             }
 
@@ -866,11 +933,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 tablaMovimientos.getColumnModel().getColumn(i).setCellRenderer(renderizadorColores);
             }
 
+            // Lógica de cálculo de páginas
+            int totalPaginas = (int) Math.ceil((double) totalMovimientos / TAMANO_PAGINA);
+            if (totalPaginas == 0) {
+                totalPaginas = 1;
+            }
+
+            lblPagina.setText("Página " + (paginaActual + 1) + " de " + totalPaginas);
+
+            // Activamos o desactivamos visualmente los botones
+            btnAnterior.setEnabled(paginaActual > 0);
+            btnSiguiente.setEnabled(paginaActual < (totalPaginas - 1));
+
         } catch (Exception e) {
+            // ¡ESTO ES LO MÁS IMPORTANTE AHORA! 
+            // Si el método falla a mitad de camino, esta línea imprimirá las letras rojas en tu consola de NetBeans
+            // diciéndote exactamente qué objeto está vacío o roto.
+            e.printStackTrace();
         }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnBorrar;
     private javax.swing.JButton btnCambiarContrasenia;
     private javax.swing.JButton btnCrear;
@@ -882,6 +966,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnIrLogin;
     private javax.swing.JButton btnIrLogin1;
     private javax.swing.JButton btnRegistrar;
+    private javax.swing.JButton btnSiguiente;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -906,6 +991,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblPagina;
     private javax.swing.JPanel panelContenedor;
     private javax.swing.JPanel panelCrear;
     private javax.swing.JPanel panelLogin;
