@@ -190,4 +190,44 @@ public class BancoService {
             em.close();
         }
     }
+
+    /**
+     * Actualiza la contraseña de una cuenta ya existente.
+     *
+     * @param idCuenta El ID interno de la cuenta que está activa.
+     * @param nuevaPass La nueva contraseña elegida.
+     * @param confirmacionPass La repetición de la contraseña para evitar
+     * errores tipográficos.
+     * @throws Exception Si las contraseñas están vacías, no coinciden, o hay un
+     * error de base de datos.
+     */
+    public void cambiarContrasenia(int idCuenta, String nuevaPass, String confirmacionPass) throws Exception {
+        if (nuevaPass == null || nuevaPass.trim().isEmpty() || confirmacionPass == null || confirmacionPass.trim().isEmpty()) {
+            throw new Exception("Las contraseñas no pueden estar vacías.");
+        }
+        if (!nuevaPass.equals(confirmacionPass)) {
+            throw new Exception("Las contraseñas no coinciden. Inténtalo de nuevo.");
+        }
+        EntityManager em = EntityManagerUtil.getEntityManager();
+        try {
+            em.getTransaction().begin();
+            Cuenta cuenta = em.find(Cuenta.class, idCuenta);
+            if (BCrypt.checkpw(nuevaPass, cuenta.getContrasenia())) {
+                throw new Exception("La nueva contraseña no puede ser igual a la que ya tienes activa.");
+            }
+            cuenta.setContrasenia(BCrypt.hashpw(nuevaPass, BCrypt.gensalt()));
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            if (e.getMessage() != null && e.getMessage().contains("La nueva contraseña no puede ser igual")) {
+                throw e;
+            }
+            throw new Exception("Error al actualizar la contraseña en la base de datos.");
+        } finally {
+            em.close();
+        }
+    }
 }

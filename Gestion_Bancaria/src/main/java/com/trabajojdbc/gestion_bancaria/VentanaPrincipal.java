@@ -59,6 +59,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         txtComentario = new javax.swing.JTextField();
         btnEnviarTransaccion = new javax.swing.JButton();
         jLabel19 = new javax.swing.JLabel();
+        btnCambiarContrasenia = new javax.swing.JButton();
         panelRegistrar = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -293,6 +294,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/logo.png"))); // NOI18N
 
+        btnCambiarContrasenia.setText("Cambiar Contraseña");
+        btnCambiarContrasenia.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCambiarContraseniaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
         panelTransaccionesLayout.setHorizontalGroup(
@@ -301,13 +309,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addGap(29, 29, 29)
-                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelTransaccionesLayout.createSequentialGroup()
                                 .addGap(8, 8, 8)
                                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(txtBienvenida)
-                                    .addComponent(txtSaldo))))
+                                    .addComponent(txtSaldo)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelTransaccionesLayout.createSequentialGroup()
+                                .addComponent(btnExit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnCambiarContrasenia)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 539, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -316,9 +328,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addGap(207, 207, 207))))
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addGap(103, 103, 103)
-                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnExit))))
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTransaccionesLayout.setVerticalGroup(
@@ -332,11 +342,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnExit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnExit)
+                            .addComponent(btnCambiarContrasenia))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -435,7 +450,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnIrLogin)
                 .addGap(43, 43, 43)
                 .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(58, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelRegistrar, "panel_registrar");
@@ -545,7 +560,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrearCuenta)
                     .addComponent(btnIrLogin1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(55, 55, 55))
         );
@@ -736,6 +751,39 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEnviarTransaccionActionPerformed
 
+    private void btnCambiarContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarContraseniaActionPerformed
+        javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 1));
+        panel.add(new javax.swing.JLabel("Introduce la nueva contraseña:"));
+        javax.swing.JPasswordField txtNueva = new javax.swing.JPasswordField();
+        panel.add(txtNueva);
+
+        panel.add(new javax.swing.JLabel("Confirma la nueva contraseña:"));
+        javax.swing.JPasswordField txtConf = new javax.swing.JPasswordField();
+        panel.add(txtConf);
+
+        int result = javax.swing.JOptionPane.showConfirmDialog(
+                this,
+                panel,
+                "Cambiar Contraseña",
+                javax.swing.JOptionPane.OK_CANCEL_OPTION,
+                javax.swing.JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == javax.swing.JOptionPane.OK_OPTION) {
+            try {
+                String nueva = new String(txtNueva.getPassword());
+                String conf = new String(txtConf.getPassword());
+
+                bancoService.cambiarContrasenia(this.cuentaActiva.getId(), nueva, conf);
+
+                javax.swing.JOptionPane.showMessageDialog(this, "¡Contraseña actualizada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (Exception ex) {
+                javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al cambiar", javax.swing.JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }//GEN-LAST:event_btnCambiarContraseniaActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -824,6 +872,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrar;
+    private javax.swing.JButton btnCambiarContrasenia;
     private javax.swing.JButton btnCrear;
     private javax.swing.JButton btnCrearCuenta;
     private javax.swing.JButton btnCrearUsuario;
