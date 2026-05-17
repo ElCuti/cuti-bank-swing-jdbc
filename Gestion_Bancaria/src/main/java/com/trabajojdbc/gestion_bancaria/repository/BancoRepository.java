@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.trabajojdbc.gestion_bancaria.repository;
 
 import com.trabajojdbc.gestion_bancaria.Cuenta;
@@ -14,15 +10,13 @@ import javax.persistence.EntityManager;
 
 /**
  *
- * @author jc324
+ * @author Daniel
  */
 public class BancoRepository {
 
     private BancoRepository() {
     }
 
-    ;
-    
     public static Integer obtenerIdUsuarioPorDni(EntityManager em, String dniABuscar) {
         try {
             Usuario usuarioEncontrado = em.createNamedQuery("Usuario.findByDni", Usuario.class)

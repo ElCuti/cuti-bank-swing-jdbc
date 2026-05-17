@@ -1,15 +1,12 @@
 package com.trabajojdbc.gestion_bancaria;
 
-import com.trabajojdbc.gestion_bancaria.util.ValidacionUtil;
-import com.trabajojdbc.gestion_bancaria.repository.BancoRepository;
+import com.trabajojdbc.gestion_bancaria.service.BancoService;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.List;
-import javax.persistence.EntityManager;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -18,12 +15,13 @@ import org.mindrot.jbcrypt.BCrypt;
 public class VentanaPrincipal extends javax.swing.JFrame {
 
     private Cuenta cuentaActiva = null;
+    private BancoService bancoService = new BancoService();
 
     public VentanaPrincipal() {
         initComponents();
-        tablaMovimientos.setRowSelectionAllowed(false); 
-        tablaMovimientos.setColumnSelectionAllowed(false); 
-        tablaMovimientos.setCellSelectionEnabled(false); 
+        tablaMovimientos.setRowSelectionAllowed(false);
+        tablaMovimientos.setColumnSelectionAllowed(false);
+        tablaMovimientos.setCellSelectionEnabled(false);
         tablaMovimientos.setFocusable(false);
     }
 
@@ -86,8 +84,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         txtConfContraseñaCrearCuenta = new javax.swing.JPasswordField();
         jLabel20 = new javax.swing.JLabel();
 
-        jLabel21.setIcon(new javax.swing.ImageIcon("C:\\Users\\jc324\\Documents\\GitHub\\ProyectoJavaJDBC_GestionBancaria\\imagenes\\logo.png")); // NOI18N
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         panelContenedor.setLayout(new java.awt.CardLayout());
@@ -105,7 +101,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jLabel3.setText("Introduzca su numero de cuenta y su contraseña para acceder a su cuenta");
 
-        btnBorrar.setText("BORRAR");
+        btnBorrar.setText("BORRAR CUENTA");
         btnBorrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBorrarActionPerformed(evt);
@@ -132,10 +128,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelLogin.setLayout(panelLoginLayout);
         panelLoginLayout.setHorizontalGroup(
             panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLoginLayout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(375, 375, 375))
             .addGroup(panelLoginLayout.createSequentialGroup()
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelLoginLayout.createSequentialGroup()
@@ -146,21 +138,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(txtCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelLoginLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel2))))
                     .addGroup(panelLoginLayout.createSequentialGroup()
                         .addGap(203, 203, 203)
                         .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelLoginLayout.createSequentialGroup()
-                        .addGap(280, 280, 280)
-                        .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelLoginLayout.createSequentialGroup()
-                                .addComponent(btnRegistrar)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnCrear))
-                            .addGroup(panelLoginLayout.createSequentialGroup()
-                                .addComponent(btnBorrar)
-                                .addGap(95, 95, 95)
-                                .addComponent(btnEntrar)))))
+                        .addGap(230, 230, 230)
+                        .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnBorrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnRegistrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(97, 97, 97)
+                        .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnCrear, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnEntrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap(214, Short.MAX_VALUE))
         );
         panelLoginLayout.setVerticalGroup(
@@ -182,7 +175,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBorrar, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnEntrar))
-                .addGap(55, 55, 55)
+                .addGap(35, 35, 35)
                 .addGroup(panelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrear)
                     .addComponent(btnRegistrar))
@@ -581,75 +574,48 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        EntityManager em = EntityManagerUtil.getEntityManager();
         try {
             int numero = Integer.parseInt(txtCuenta.getText());
             String contrasenia = txtPass.getText().trim();
 
-            Cuenta cuentaEncontrada = BancoRepository.buscarCuentaPorNumero(em, numero);
+            Cuenta cuentaLogueada = bancoService.login(numero, contrasenia);
 
-            if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
-                this.cuentaActiva = cuentaEncontrada;
-                mostrar(panelTransacciones);
-                java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
-                layout.show(panelContenedor, "pantalla_transacciones");
-                Usuario propietario = cuentaEncontrada.getIDUsuario();
-                txtCuenta.setText("");
-                txtPass.setText("");
-                txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
-                txtSaldo.setText("Tu saldo actual es de " + cuentaEncontrada.getSaldo() + "€");
-                actualizarTablaMovimientos();
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            this.cuentaActiva = cuentaLogueada;
+            mostrar(panelTransacciones);
+            java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
+            layout.show(panelContenedor, "pantalla_transacciones");
 
-            }
+            Usuario propietario = cuentaLogueada.getIDUsuario();
+            txtCuenta.setText("");
+            txtPass.setText("");
+            txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
+            txtSaldo.setText("Tu saldo actual es de " + cuentaLogueada.getSaldo() + "€");
+
+            actualizarTablaMovimientos();
 
         } catch (NumberFormatException ex) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Error, compruebe que has introducido todos los datos necesarios y correctamente", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        } finally {
-            em.close();
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, introduce un número de cuenta válido (solo números).", "Error de Formato", javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error de Autenticación", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
-
 
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
-        String nombre = txtUsuarioCrear.getText().trim();
-        String apellido = txtApellidoCrear.getText().trim();
-        String dni = txtDNICrear.getText().trim();
-
-        if (nombre.isEmpty() || dni.isEmpty()) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El Nombre y el DNI son campos obligatorios", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (!ValidacionUtil.dniCheck(dni)) {
-            javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        Usuario nuevoUsuario = new Usuario();
-        nuevoUsuario.setNombre(nombre);
-        nuevoUsuario.setApellido(apellido);
-        nuevoUsuario.setDni(dni);
-
-        EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            em.getTransaction().begin();
-            em.persist(nuevoUsuario);
-            em.getTransaction().commit();
-            javax.swing.JOptionPane.showMessageDialog(this, "Usuario creado correctamente.");
+            String nombre = txtUsuarioCrear.getText().trim();
+            String apellido = txtApellidoCrear.getText().trim();
+            String dni = txtDNICrear.getText().trim();
+
+            bancoService.crearUsuario(nombre, apellido, dni);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Usuario creado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             txtUsuarioCrear.setText("");
             txtApellidoCrear.setText("");
             txtDNICrear.setText("");
-        } catch (Exception e) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed: Usuario.DNI")) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Error al guardar: ESTE DNI YA ESTA REGISTRADO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-            }
 
-        } finally {
-            em.close();
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnCrearUsuarioActionPerformed
 
@@ -679,59 +645,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         layout.show(panelContenedor, "pantalla_login");    }//GEN-LAST:event_btnIrLogin1ActionPerformed
 
     private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
-        EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            String strNumero = txtNumeroCrearCuenta.getText();
+            String strNumero = txtNumeroCrearCuenta.getText().trim();
             String contrasenia = txtContraseñaCrearCuenta.getText().trim();
-            String dni = txtDNICrearCuenta.getText().trim();
             String contraseniaCheck = txtConfContraseñaCrearCuenta.getText().trim();
+            String dni = txtDNICrearCuenta.getText().trim();
 
-            if (!contrasenia.equals(contraseniaCheck)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No coinciden las contraseñas, tienen que ser las mismas", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            bancoService.crearCuenta(strNumero, contrasenia, contraseniaCheck, dni);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            txtNumeroCrearCuenta.setText("");
+            txtContraseñaCrearCuenta.setText("");
+            txtConfContraseñaCrearCuenta.setText("");
+            txtDNICrearCuenta.setText("");
+
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+
+            if (ex.getMessage().contains("No coinciden las contraseñas")) {
                 txtContraseñaCrearCuenta.setText("");
                 txtConfContraseñaCrearCuenta.setText("");
-                return;
             }
-            if (strNumero.isEmpty() || dni.isEmpty() || contrasenia.isEmpty() || contraseniaCheck.isEmpty()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Todos los campos son requeridos!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            int numero = Integer.parseInt(strNumero);
-            if (!ValidacionUtil.dniCheck(dni)) {
-                javax.swing.JOptionPane.showMessageDialog(this, "El DNI no tiene el formato correcto, comprueba que este correcto (8 Numeros y una letra mayuscula)", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            Integer id = BancoRepository.obtenerIdUsuarioPorDni(em, dni);
-            if (id == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "El DNI no corresponde a ninguno de nuestra base de datos, compruebelo de nuevo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                em.close();
-                return;
-            }
-            Cuenta cuentaNueva = new Cuenta();
-            Usuario propietario = new Usuario(id);
-            cuentaNueva.setIDUsuario(propietario);
-            cuentaNueva.setNumero(numero);
-            cuentaNueva.setContrasenia(BCrypt.hashpw(contrasenia, BCrypt.gensalt()));
-
-            try {
-                em.getTransaction().begin();
-                em.persist(cuentaNueva);
-                em.getTransaction().commit();
-                javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.");
-                txtNumeroCrearCuenta.setText("");
-                txtContraseñaCrearCuenta.setText("");
-                txtDNICrearCuenta.setText("");
-                txtConfContraseñaCrearCuenta.setText("");
-            } catch (Exception e) {
-                if (em.getTransaction().isActive()) {
-                    em.getTransaction().rollback();
-                }
-                if (e.getMessage() != null && e.getMessage().contains("UNIQUE constraint failed (UNIQUE constraint failed: Cuenta.Numero")) {
-                    javax.swing.JOptionPane.showMessageDialog(this, "Error al ejecutar: ESTE NÚMERO ESTA EN USO!", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        } finally {
-            em.close();
         }
     }//GEN-LAST:event_btnCrearCuentaActionPerformed
 
@@ -740,30 +674,28 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNumeroCrearCuentaActionPerformed
 
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
-        EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            int numero = Integer.parseInt(txtCuenta.getText());
+            String strNumero = txtCuenta.getText().trim();
             String contrasenia = txtPass.getText().trim();
 
-            Cuenta cuentaEncontrada = BancoRepository.buscarCuentaPorNumero(em, numero);
+            int respuesta = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Estás totalmente seguro de que quieres BORRAR tu cuenta? Esta acción NO se puede deshacer.",
+                    "Confirmar Borrado definitivo",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.WARNING_MESSAGE
+            );
 
-            if (cuentaEncontrada != null && BCrypt.checkpw(contrasenia, cuentaEncontrada.getContrasenia())) {
-                em.getTransaction().begin();
-                em.remove(cuentaEncontrada);
-                em.getTransaction().commit();
-                javax.swing.JOptionPane.showMessageDialog(this, "Cuenta borrada con exito!", "Borrado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            } else {
-                javax.swing.JOptionPane.showMessageDialog(this, "El numero o la contraseña son incorrectos, verifique y vuelva a intentarlo", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                bancoService.borrarCuenta(strNumero, contrasenia);
 
+                javax.swing.JOptionPane.showMessageDialog(this, "Cuenta borrada con éxito.", "Borrado Completado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                txtCuenta.setText("");
+                txtPass.setText("");
             }
 
-        } catch (NumberFormatException ex) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            javax.swing.JOptionPane.showMessageDialog(this, "Error, compruebe que has introducido todos los datos necesarios y correctamente", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-        } finally {
-            em.close();
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error al intentar borrar", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnBorrarActionPerformed
 
@@ -772,63 +704,36 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNumRActionPerformed
 
     private void btnEnviarTransaccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTransaccionActionPerformed
-        EntityManager em = EntityManagerUtil.getEntityManager();
         try {
             int numeroEnviar = Integer.parseInt(txtNumR.getText());
             int cantidad = Integer.parseInt(txtCantidad.getText());
             String comentario = txtComentario.getText().trim();
-            Cuenta cuentaOrigen = em.find(Cuenta.class, this.cuentaActiva.getId());
-            Cuenta cuentaDestino = BancoRepository.buscarCuentaPorNumero(em, numeroEnviar);
-            if (cantidad <= 0) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La cantidad a enviar debe ser mayor a 0.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (cuentaDestino == null) {
-                javax.swing.JOptionPane.showMessageDialog(this, "La cuenta de destino no existe.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (cuentaOrigen.getId() == cuentaDestino.getId()) {
-                javax.swing.JOptionPane.showMessageDialog(this, "No puedes enviarte dinero a ti mismo.", "Error", javax.swing.JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            if (cuentaOrigen.getSaldo() < cantidad) {
-                javax.swing.JOptionPane.showMessageDialog(this, "Saldo insuficiente para realizar la transacción.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+
             int respuesta = javax.swing.JOptionPane.showConfirmDialog(
-                    this, "¿Estás seguro de que quieres enviar " + cantidad + "€ a la cuenta número " + numeroEnviar + "?", "Confirmar Transferencia", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
+                    this, "¿Estás seguro de que quieres enviar " + cantidad + "€ a la cuenta número " + numeroEnviar + "?",
+                    "Confirmar Transferencia", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
             );
-            if (respuesta != javax.swing.JOptionPane.YES_OPTION) {
-                return;
+
+            if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                bancoService.realizarTransferencia(this.cuentaActiva.getId(), numeroEnviar, cantidad, comentario);
+
+                txtNumR.setText("");
+                txtCantidad.setText("");
+                txtComentario.setText("");
+
+                this.cuentaActiva.setSaldo(this.cuentaActiva.getSaldo() - cantidad);
+                txtSaldo.setText("Tu saldo actual es de " + this.cuentaActiva.getSaldo() + "€");
+
+                actualizarTablaMovimientos();
+                javax.swing.JOptionPane.showMessageDialog(this, "¡Transacción enviada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
-            em.getTransaction().begin();
 
-            cuentaOrigen.setSaldo(cuentaOrigen.getSaldo() - cantidad);
-            cuentaDestino.setSaldo(cuentaDestino.getSaldo() + cantidad);
-
-            Transacciones nuevoMovimiento = new Transacciones();
-            nuevoMovimiento.setCantidad(cantidad);
-            nuevoMovimiento.setComentario(comentario);
-            nuevoMovimiento.setCuentaEmisor(cuentaOrigen);
-            nuevoMovimiento.setCuentaReceptor(cuentaDestino);
-
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-            nuevoMovimiento.setFecha(sdf.format(new java.util.Date()));
-
-            em.persist(nuevoMovimiento);
-            em.getTransaction().commit();
-            txtNumR.setText("");
-            txtCantidad.setText("");
-            txtComentario.setText("");
-            txtSaldo.setText("Tu saldo actual es de " + cuentaOrigen.getSaldo() + "€");
-            actualizarTablaMovimientos();
-            javax.swing.JOptionPane.showMessageDialog(this, "¡Transacción enviada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
+        } catch (NumberFormatException e) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Por favor, introduce números válidos.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
-
-        } finally {
-            em.close();
+            javax.swing.JOptionPane.showMessageDialog(this, e.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
         }
+
     }//GEN-LAST:event_btnEnviarTransaccionActionPerformed
 
     /**
@@ -859,9 +764,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         if (this.cuentaActiva == null) {
             return;
         }
-        EntityManager em = EntityManagerUtil.getEntityManager();
-        try{
-        List<Transacciones> ultimosMovimientos = BancoRepository.obtenerUltimosMovimientos(this.cuentaActiva.getId());
+
+        try {
+            List<Transacciones> ultimosMovimientos = bancoService.obtenerUltimosMovimientos(this.cuentaActiva.getId());
 
             DefaultTableModel modelo = (DefaultTableModel) tablaMovimientos.getModel();
             modelo.setRowCount(0);
@@ -884,6 +789,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     numeroRelacionado
                 });
             }
+
             DefaultTableCellRenderer renderizadorColores = new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -891,12 +797,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
                     String tipoMovimiento = (String) table.getModel().getValueAt(row, 0);
 
-                    if (!isSelected) { 
+                    if (!isSelected) {
                         if ("Enviado".equals(tipoMovimiento)) {
-                            c.setBackground(new Color(255, 235, 235)); 
+                            c.setBackground(new Color(255, 235, 235));
                             c.setForeground(Color.black);
                         } else if ("Recibido".equals(tipoMovimiento)) {
-                            c.setBackground(new Color(212, 250, 190)); 
+                            c.setBackground(new Color(212, 250, 190));
                             c.setForeground(Color.black);
                         } else {
                             c.setBackground(Color.WHITE);
@@ -907,14 +813,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     return c;
                 }
             };
+
             for (int i = 0; i < tablaMovimientos.getColumnCount(); i++) {
                 tablaMovimientos.getColumnModel().getColumn(i).setCellRenderer(renderizadorColores);
             }
 
         } catch (Exception e) {
-            
-        } finally {
-            em.close();
         }
     }
 

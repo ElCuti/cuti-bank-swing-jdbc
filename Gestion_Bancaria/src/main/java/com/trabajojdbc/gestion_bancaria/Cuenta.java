@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.trabajojdbc.gestion_bancaria;
 
 import java.io.Serializable;
@@ -19,7 +15,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Alumnado
+ * @author Daniel
  */
 @Entity
 @Table(name = "Cuenta")
@@ -32,30 +28,30 @@ import javax.persistence.Table;
 public class Cuenta implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @Basic(optional = false)
     @Column(name = "ID")
     private Integer id;
-    
+
     @Basic(optional = false)
     @Column(name = "Numero")
     private int numero;
-    
+
     @Basic(optional = false)
     @Column(name = "Contrasenia")
     private String contrasenia;
-    
+
     @Basic(optional = false)
     @Column(name = "Saldo")
     private int saldo = 0;
-    
+
     @OneToMany(mappedBy = "cuentaEmisor")
     private Collection<Transacciones> transferenciasEnviadas;
 
     @OneToMany(mappedBy = "cuentaReceptor")
     private Collection<Transacciones> transferenciasRecibidas;
-    
+
     @JoinColumn(name = "ID_Usuario", referencedColumnName = "ID")
     @ManyToOne
     private Usuario iDUsuario;
@@ -147,5 +143,5 @@ public class Cuenta implements Serializable {
     public String toString() {
         return "com.trabajojdbc.gestion_bancaria.Cuenta[ cuentaPK=" + id + " ]";
     }
-    
+
 }

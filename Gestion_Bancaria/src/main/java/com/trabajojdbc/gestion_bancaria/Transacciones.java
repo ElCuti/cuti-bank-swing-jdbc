@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.trabajojdbc.gestion_bancaria;
 
 import java.io.Serializable;
@@ -18,7 +14,7 @@ import javax.persistence.Table;
 
 /**
  *
- * @author Alumnado
+ * @author Daniel
  */
 @Entity
 @Table(name = "Transacciones")
