@@ -164,6 +164,7 @@ public class BancoService {
         EntityManager em = EntityManagerUtil.getEntityManager();
         Integer idUsuario = BancoRepository.obtenerIdUsuarioPorDni(em, dni);
         if (idUsuario == null) {
+            em.close();
             throw new Exception("El DNI no corresponde a ninguno de nuestra base de datos, compruébelo de nuevo.");
         }
         try {

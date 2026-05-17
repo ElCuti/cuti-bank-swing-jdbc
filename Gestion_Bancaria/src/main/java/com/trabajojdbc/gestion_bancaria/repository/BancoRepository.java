@@ -9,8 +9,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 /**
- * Clase Repositorio encargada de gestionar (Metodos estáticos) todas las consultas que contengan
- * SQL/JPQL para dejar la clase BancoService con la lógica de banco.
+ * Clase Repositorio encargada de gestionar (Metodos estáticos) todas las
+ * consultas que contengan SQL/JPQL para dejar la clase BancoService con la
+ * lógica de banco.
  *
  * * @author Daniel
  */
@@ -59,9 +60,12 @@ public class BancoRepository {
 
     /**
      * Recupera el historial reciente de movimientos de una cuenta.
-     * @param cuentaId El ID interno de la cuenta de la cual se quieren consultar los movimientos.
-     * @return Una lista con las últimas 5 transacciones ordenadas de la más reciente a la más antigua. 
-     * Si hay un error o no hay transacciones, devuelve una lista vacía.
+     *
+     * @param cuentaId El ID interno de la cuenta de la cual se quieren
+     * consultar los movimientos.
+     * @return Una lista con las últimas 5 transacciones ordenadas de la más
+     * reciente a la más antigua. Si hay un error o no hay transacciones,
+     * devuelve una lista vacía.
      */
     public static List<Transacciones> obtenerUltimosMovimientos(int cuentaId) {
         EntityManager em = EntityManagerUtil.getEntityManager();
