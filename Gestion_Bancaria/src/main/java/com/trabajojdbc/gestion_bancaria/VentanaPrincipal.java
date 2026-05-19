@@ -941,14 +941,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
             lblPagina.setText("Página " + (paginaActual + 1) + " de " + totalPaginas);
 
-            // Activamos o desactivamos visualmente los botones
             btnAnterior.setEnabled(paginaActual > 0);
             btnSiguiente.setEnabled(paginaActual < (totalPaginas - 1));
 
         } catch (Exception e) {
-            // ¡ESTO ES LO MÁS IMPORTANTE AHORA! 
-            // Si el método falla a mitad de camino, esta línea imprimirá las letras rojas en tu consola de NetBeans
-            // diciéndote exactamente qué objeto está vacío o roto.
             e.printStackTrace();
         }
     }
