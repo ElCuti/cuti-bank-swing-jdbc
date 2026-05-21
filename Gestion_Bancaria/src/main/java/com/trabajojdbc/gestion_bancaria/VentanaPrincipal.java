@@ -981,13 +981,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     if (transaccion.getCuentaReceptor() != null) {
                         numeroRelacionadoStr = String.valueOf(transaccion.getCuentaReceptor().getNumero());
                     }
-                } else {
+
+                } // Si en la transacción no somos emisores, seremos receptores, por lo tanto es dinero recibido 
+                else {
                     tipo = "Recibido";
                     if (transaccion.getCuentaEmisor() != null) {
                         numeroRelacionadoStr = String.valueOf(transaccion.getCuentaEmisor().getNumero());
                     }
                 }
 
+                //Agregamos una fila con los datos recopilados de la transacción
                 modelo.addRow(new Object[]{
                     tipo,
                     transaccion.getCantidad() + "€",
@@ -996,42 +999,54 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 });
             }
 
+            //Llamamos a la clase para pintar la celda dependiendo del tipo de transacción
             DefaultTableCellRenderer renderizadorColores = new DefaultTableCellRenderer() {
                 @Override
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                    //Guardamos mediante el metodo original el prototipo de celda de Java
                     Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+                    //Obtenemos que tipo de movimiento es para saber de que color pintarlo
                     String tipoMovimiento = (String) table.getModel().getValueAt(row, 0);
 
+                    //Si no esta seleccionado por el usuario, se pinta.
                     if (!isSelected) {
+                        //De rojo si es una transferencia a otra persona
                         if ("Enviado".equals(tipoMovimiento)) {
                             c.setBackground(new Color(255, 235, 235));
                             c.setForeground(Color.black);
-                        } else if ("Recibido".equals(tipoMovimiento)) {
+                        }//De verde si es una transferencia recibida 
+                        else if ("Recibido".equals(tipoMovimiento)) {
                             c.setBackground(new Color(212, 250, 190));
                             c.setForeground(Color.black);
-                        } else {
+                        }//En blanco en caso de excepción o bug
+                        else {
                             c.setBackground(Color.WHITE);
                         }
                     }
 
+                    //Centramos el texto y retornamos la celda con color
                     setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
                     return c;
                 }
             };
 
+            //Aplicamos a todas las columnas el color que le corresponde
             for (int i = 0; i < tablaMovimientos.getColumnCount(); i++) {
                 tablaMovimientos.getColumnModel().getColumn(i).setCellRenderer(renderizadorColores);
             }
 
-            // Lógica de cálculo de páginas
+            //Calculamos cuantas paginas tenemos que crear dividiendo la cantidad de movimientos del usuario con el tamaño de la pagina
+            //Al hacer el calculo con un double, podemos luego con el .ceil redondearlo para arriba y luego transformarlo en un INT
             int totalPaginas = (int) Math.ceil((double) totalMovimientos / TAMANO_PAGINA);
             if (totalPaginas == 0) {
                 totalPaginas = 1;
             }
 
+            //Ponemos el numero de pagina en el que estamos y el numero total de paginas
             lblPagina.setText("Página " + (paginaActual + 1) + " de " + totalPaginas);
 
+            //Activamos la visibilidad de los botones si se cumplen las condiciones
             btnAnterior.setEnabled(paginaActual > 0);
             btnSiguiente.setEnabled(paginaActual < (totalPaginas - 1));
 
