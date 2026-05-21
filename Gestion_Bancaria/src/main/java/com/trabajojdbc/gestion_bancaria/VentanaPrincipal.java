@@ -955,22 +955,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     public void actualizarTablaMovimientos() {
+        //Si no hay cuenta activa no se ejecuta
         if (this.cuentaActiva == null) {
             return;
         }
-
         try {
+            //Recopilamos todas las transacciones del usuario
             List<Transacciones> movimientos = bancoService.obtenerMovimientosPaginados(this.cuentaActiva.getId(), paginaActual, TAMANO_PAGINA);
+            //Guardamos el total de transacciones del usuario
             long totalMovimientos = bancoService.contarTotalMovimientos(this.cuentaActiva.getId());
 
+            //Creamos un modelo default de tabla con 0 filas
             DefaultTableModel modelo = (DefaultTableModel) tablaMovimientos.getModel();
             modelo.setRowCount(0);
 
+            //Recorremos cada transacción
             for (Transacciones transaccion : movimientos) {
                 String tipo;
-                String numeroRelacionadoStr = "N/A"; // Por si es un ingreso del banco y no hay otra cuenta
+                String numeroRelacionadoStr = "";
 
-                // Comprobamos de forma segura si somos el emisor (evitando el NullPointerException)
+                // Comprobamos si en la transacción fuimos emisores o receptores
+                // Si la transaccion tiene un emisor y el id del emisor coincide con el de la cuenta activa lo establecemos como un "envio"
                 if (transaccion.getCuentaEmisor() != null && transaccion.getCuentaEmisor().getId() == this.cuentaActiva.getId()) {
                     tipo = "Enviado";
                     if (transaccion.getCuentaReceptor() != null) {
