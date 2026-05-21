@@ -63,6 +63,7 @@ public class BancoRepository {
      *
      * @param cuentaId El ID interno de la cuenta de la cual se quieren
      * consultar los movimientos.
+     * @param pagina Variable que cuenta en que pagina se
      * @return Una lista con las últimas 5 transacciones ordenadas de la más
      * reciente a la más antigua. Si hay un error o no hay transacciones,
      * devuelve una lista vacía.
@@ -70,28 +71,22 @@ public class BancoRepository {
     public static List<Transacciones> obtenerMovimientosPaginados(int cuentaId, int pagina, int tamanoPagina) {
         EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            // 1. Usamos el JPQL original que FUNCIONA y mapea las cuentas perfectamente
+            // Obtenemos mediante esta query todas las transacciones del usuario
             List<Transacciones> todasLasTransacciones = em.createQuery(
                     "SELECT t FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId ORDER BY t.id DESC",
                     Transacciones.class)
                     .setParameter("miId", cuentaId)
                     .getResultList();
 
-            // 2. Hacemos la paginación matemáticamente usando Java (subList)
+            // Obtenemos la primera página de la lista a mostrar
             int inicio = pagina * tamanoPagina;
-            // Evitamos pasarnos del límite si la última página tiene menos de 5 transacciones
+            // Ponemos un límite en caso de que la ultima página tenga menos de 5
             int fin = Math.min(inicio + tamanoPagina, todasLasTransacciones.size());
 
-            // Si por algún casual pedimos una página que no existe
-            if (inicio >= todasLasTransacciones.size()) {
-                return Collections.emptyList();
-            }
-
-            // 3. Devolvemos "el recorte" de la lista
+            //Devolvemos "el recorte" de la lista
             return todasLasTransacciones.subList(inicio, fin);
 
         } catch (Exception e) {
-            e.printStackTrace();
             return Collections.emptyList();
         } finally {
             if (em != null && em.isOpen()) {
@@ -100,16 +95,25 @@ public class BancoRepository {
         }
     }
 
+    /**
+     * Cuenta el número total de movimientos (transacciones) asociados a una
+     * cuenta específica.
+     *
+     * @param cuentaId El identificador único de la cuenta a consultar.
+     * @return El número total de movimientos de la cuenta. Retorna 0 si la
+     * cuenta no tiene movimientos o si ocurre un error durante la consulta a la
+     * base de datos.
+     */
     public static long contarTotalMovimientos(int cuentaId) {
         EntityManager em = EntityManagerUtil.getEntityManager();
         try {
+            // returnamos el count con la cantidad de transacciones de la cuenta consultada (Ya sean transacciones emitidas o recibidas)
             return em.createQuery(
                     "SELECT COUNT(t.id) FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId",
                     Long.class)
                     .setParameter("miId", cuentaId)
                     .getSingleResult();
         } catch (Exception e) {
-            System.err.println("Error contando movimientos: " + e.getMessage());
             return 0;
         } finally {
             if (em != null && em.isOpen()) {

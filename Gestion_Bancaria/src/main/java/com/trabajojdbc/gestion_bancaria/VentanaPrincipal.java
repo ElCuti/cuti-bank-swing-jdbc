@@ -14,12 +14,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class VentanaPrincipal extends javax.swing.JFrame {
 
+    // Inicializamos las variables que vamos a tener que usar a lo largo del código
     private Cuenta cuentaActiva = null;
     private BancoService bancoService = new BancoService();
     private int paginaActual = 0;
     private final int TAMANO_PAGINA = 5;
 
     public VentanaPrincipal() {
+        //Iniciamos los componentes de la parte grafica y desactivamos la selección de la tabla de transacciones
         initComponents();
         tablaMovimientos.setRowSelectionAllowed(false);
         tablaMovimientos.setColumnSelectionAllowed(false);
@@ -615,6 +617,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Cierre de sesión del usuario logeado
+     */
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         this.cuentaActiva = null;
         mostrar(panelLogin);
@@ -622,24 +627,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         layout.show(panelContenedor, "pantalla_login");
     }//GEN-LAST:event_btnExitActionPerformed
 
+    /**
+     * Procesa el intento de logearte con tu cuenta
+     */
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
         try {
+            //Recogemos los datos de los campos de texto
             int numero = Integer.parseInt(txtCuenta.getText());
             String contrasenia = txtPass.getText().trim();
 
+            //Obtenemos la cuenta
             Cuenta cuentaLogueada = bancoService.login(numero, contrasenia);
 
+            //Establecemos la cuenta de forma activa y lo redirigimos al panel de transacciones
             this.cuentaActiva = cuentaLogueada;
             mostrar(panelTransacciones);
             java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
             layout.show(panelContenedor, "pantalla_transacciones");
 
+            //Guardamos el ID del usuario activo
             Usuario propietario = cuentaLogueada.getIDUsuario();
+
+            //Vaciamos los campos de texto del login y rellenamos los campos de bienvenida del panel de transacciones
             txtCuenta.setText("");
             txtPass.setText("");
             txtBienvenida.setText("¡Bienvenido a tu cuenta " + propietario.getNombre() + "!");
             txtSaldo.setText("Tu saldo actual es de " + cuentaLogueada.getSaldo() + "€");
 
+            //Establecemos la primera pagina del historial de transacciones y la mostramos
             this.paginaActual = 0;
             actualizarTablaMovimientos();
 
@@ -650,16 +665,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnEntrarActionPerformed
-
+    /**
+     * Procesamiento de creación de usuario
+     */
     private void btnCrearUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearUsuarioActionPerformed
         try {
+            //Recogemos los datos de los campos de texto
             String nombre = txtUsuarioCrear.getText().trim();
             String apellido = txtApellidoCrear.getText().trim();
             String dni = txtDNICrear.getText().trim();
 
+            //Creamos el usuario con los datos insertados
             bancoService.crearUsuario(nombre, apellido, dni);
 
+            //Mostramos mensaje de exito
             javax.swing.JOptionPane.showMessageDialog(this, "Usuario creado correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            //Vaciamos los campos de texto
             txtUsuarioCrear.setText("");
             txtApellidoCrear.setText("");
             txtDNICrear.setText("");
@@ -669,41 +691,60 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCrearUsuarioActionPerformed
 
+    /**
+     * Boton para volver al login desde crear usuario
+     */
     private void btnIrLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrLoginActionPerformed
         mostrar(panelLogin);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_login");
     }//GEN-LAST:event_btnIrLoginActionPerformed
 
+    /**
+     * Boton para ir al panel para registrarse como usuario
+     */
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         mostrar(panelRegistrar);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_registrar");    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     private void txtUsuarioCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUsuarioCrearActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_txtUsuarioCrearActionPerformed
 
+    /**
+     * Boton para ir al panel de crear cuentas
+     */
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         mostrar(panelCrear);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_crear");    }//GEN-LAST:event_btnCrearActionPerformed
 
+    /**
+     * Boton para volver al login desde crear cuenta
+     */
     private void btnIrLogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIrLogin1ActionPerformed
         mostrar(panelLogin);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_login");    }//GEN-LAST:event_btnIrLogin1ActionPerformed
-
+    /**
+     * Procesamiento para crear cuenta
+     */
     private void btnCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearCuentaActionPerformed
         try {
+            //Recogemos los datos de los campos de texto
             String strNumero = txtNumeroCrearCuenta.getText().trim();
             String contrasenia = txtContraseñaCrearCuenta.getText().trim();
             String contraseniaCheck = txtConfContraseñaCrearCuenta.getText().trim();
             String dni = txtDNICrearCuenta.getText().trim();
 
+            //Creamos la cuenta
             bancoService.crearCuenta(strNumero, contrasenia, contraseniaCheck, dni);
 
+            //Mostramos mensaje de exito
             javax.swing.JOptionPane.showMessageDialog(this, "Cuenta creada correctamente.", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            //Vaciamos los campos de texto
             txtNumeroCrearCuenta.setText("");
             txtContraseñaCrearCuenta.setText("");
             txtConfContraseñaCrearCuenta.setText("");
@@ -712,6 +753,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         } catch (Exception ex) {
             javax.swing.JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
 
+            //En caso de que no coincidan las contraseñas vaciamos unicamente los campos de contraseña
             if (ex.getMessage().contains("No coinciden las contraseñas")) {
                 txtContraseñaCrearCuenta.setText("");
                 txtConfContraseñaCrearCuenta.setText("");
@@ -723,11 +765,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNumeroCrearCuentaActionPerformed
 
+    /**
+     * Procesamiento de borrado de cuenta
+     */
     private void btnBorrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarActionPerformed
         try {
+            //Recolección de datos mediante campos de texto
             String strNumero = txtCuenta.getText().trim();
             String contrasenia = txtPass.getText().trim();
 
+            //Mensaje de confirmación
             int respuesta = javax.swing.JOptionPane.showConfirmDialog(
                     this,
                     "¿Estás totalmente seguro de que quieres BORRAR tu cuenta? Esta acción NO se puede deshacer.",
@@ -737,9 +784,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             );
 
             if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                //Borramos la cuenta si la respuesta es que si
                 bancoService.borrarCuenta(strNumero, contrasenia);
 
+                //Mostramos mensaje de exito
                 javax.swing.JOptionPane.showMessageDialog(this, "Cuenta borrada con éxito.", "Borrado Completado", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+                //Vaciamos los campos de texto
                 txtCuenta.setText("");
                 txtPass.setText("");
             }
@@ -753,28 +804,38 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNumRActionPerformed
 
+    /**
+     * Procesamiento de enviar transacciones
+     */
     private void btnEnviarTransaccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarTransaccionActionPerformed
         try {
+            //Obtención de datos mediante campo de texto
             int numeroEnviar = Integer.parseInt(txtNumR.getText());
             int cantidad = Integer.parseInt(txtCantidad.getText());
             String comentario = txtComentario.getText().trim();
 
+            //Lanzamos mensaje de confirmación
             int respuesta = javax.swing.JOptionPane.showConfirmDialog(
                     this, "¿Estás seguro de que quieres enviar " + cantidad + "€ a la cuenta número " + numeroEnviar + "?",
                     "Confirmar Transferencia", javax.swing.JOptionPane.YES_NO_OPTION, javax.swing.JOptionPane.QUESTION_MESSAGE
             );
 
             if (respuesta == javax.swing.JOptionPane.YES_OPTION) {
+                //Ejecutamos las transacción
                 bancoService.realizarTransferencia(this.cuentaActiva.getId(), numeroEnviar, cantidad, comentario);
 
                 txtNumR.setText("");
                 txtCantidad.setText("");
                 txtComentario.setText("");
 
+                //Actualizamos el saldo en el panel de transacciones
                 this.cuentaActiva.setSaldo(this.cuentaActiva.getSaldo() - cantidad);
                 txtSaldo.setText("Tu saldo actual es de " + this.cuentaActiva.getSaldo() + "€");
 
+                //Actualizamos los registros recientes
                 actualizarTablaMovimientos();
+
+                //Mensaje de exito
                 javax.swing.JOptionPane.showMessageDialog(this, "¡Transacción enviada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             }
 
@@ -786,8 +847,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnEnviarTransaccionActionPerformed
 
+    /**
+     * Procesamiento de cambio de contraseña
+     */
     private void btnCambiarContraseniaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCambiarContraseniaActionPerformed
+        //Creamos una ventana de una sola columna
         javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 1));
+        //Le ponemos los elementos que queremos en la ventana
         panel.add(new javax.swing.JLabel("Introduce la nueva contraseña:"));
         javax.swing.JPasswordField txtNueva = new javax.swing.JPasswordField();
         panel.add(txtNueva);
@@ -796,6 +862,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         javax.swing.JPasswordField txtConf = new javax.swing.JPasswordField();
         panel.add(txtConf);
 
+        //Ponemos un panel de confirmación
         int result = javax.swing.JOptionPane.showConfirmDialog(
                 this,
                 panel,
@@ -806,11 +873,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         if (result == javax.swing.JOptionPane.OK_OPTION) {
             try {
+
                 String nueva = new String(txtNueva.getPassword());
                 String conf = new String(txtConf.getPassword());
 
+                //Cambiamos la contraseña antigua a por la nueva
                 bancoService.cambiarContrasenia(this.cuentaActiva.getId(), nueva, conf);
 
+                //Mostramos mensaje de exito
                 javax.swing.JOptionPane.showMessageDialog(this, "¡Contraseña actualizada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
             } catch (Exception ex) {
@@ -819,6 +889,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCambiarContraseniaActionPerformed
 
+    /**
+     * Boton para navegar hacia atras en las paginas de transacciones
+     */
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
         if (paginaActual > 0) {
             paginaActual--;
@@ -826,16 +899,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
+    /**
+     * Boton para navegar hacia adelante en las paginas de transacciones
+     */
     private void btnSiguienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguienteActionPerformed
         try {
-            // Recalculamos el total de páginas para asegurarnos de que el avance es legal
+            // Calculamos cuantas transacciones tiene el usuario
             long totalMovimientos = bancoService.contarTotalMovimientos(this.cuentaActiva.getId());
+            //Calculamos cuantas paginas tenemos que crear dividiendo la cantidad de movimientos del usuario con el tamaño de la pagina
+            //Al hacer el calculo con un double, podemos luego con el .ceil redondearlo para arriba y luego transformarlo en un INT
             int totalPaginas = (int) Math.ceil((double) totalMovimientos / TAMANO_PAGINA);
+            //Si no tiene paginas, le ponemos 1 para el correcto funcionamiento
             if (totalPaginas == 0) {
                 totalPaginas = 1;
             }
 
-            // REGLA DE ORO: Solo sumamos si la página actual es menor que la última página
+            //Si hay mas paginas para avanzar, avanzamos y enseñamos los siguientes 5 registros
             if (paginaActual < totalPaginas - 1) {
                 paginaActual++;
                 actualizarTablaMovimientos();
@@ -845,7 +924,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSiguienteActionPerformed
 
     /**
-     * @param args the command line arguments
+     * Metodo main
      */
     public static void main(String args[]) {
         try {
@@ -861,6 +940,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         });
     }
 
+    /**
+     * Cambia la pantalla actual del contenedor principal por una nueva vista.
+     * Borra todo el contenido previo y redibuja el panel con el nuevo
+     * componente.
+     *
+     * @param comp El componente (JPanel, vista, etc.) que se desea mostrar.
+     */
     public void mostrar(Component comp) {
         panelContenedor.removeAll();
         panelContenedor.add(comp);
