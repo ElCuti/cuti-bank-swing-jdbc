@@ -329,9 +329,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         panelTransaccionesLayout.setHorizontalGroup(
             panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                .addGap(29, 29, 29)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
                         .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(panelTransaccionesLayout.createSequentialGroup()
@@ -356,10 +359,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                 .addComponent(lblPagina)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btnSiguiente)
-                                .addGap(6, 6, 6))))
-                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                        .addGap(103, 103, 103)
-                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(6, 6, 6)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelTransaccionesLayout.setVerticalGroup(
@@ -459,9 +459,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                             .addComponent(btnCrearUsuario)
                             .addComponent(txtDNICrear, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelRegistrarLayout.createSequentialGroup()
-                        .addGap(52, 52, 52)
+                        .addGap(51, 51, 51)
                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(303, Short.MAX_VALUE))
+                .addContainerGap(304, Short.MAX_VALUE))
         );
         panelRegistrarLayout.setVerticalGroup(
             panelRegistrarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,9 +484,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addComponent(btnCrearUsuario)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnIrLogin)
-                .addGap(43, 43, 43)
+                .addGap(26, 26, 26)
                 .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addContainerGap(75, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelRegistrar, "panel_registrar");
@@ -554,9 +554,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(btnIrLogin1))
                                     .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(panelCrearLayout.createSequentialGroup()
-                                            .addComponent(txtDNICrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelCrearLayout.createSequentialGroup()
+                                            .addComponent(txtDNICrearCuenta)
+                                            .addGap(14, 14, 14)
                                             .addComponent(txtConfContraseñaCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addGroup(panelCrearLayout.createSequentialGroup()
                                             .addComponent(txtNumeroCrearCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -596,9 +596,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addGroup(panelCrearLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrearCuenta)
                     .addComponent(btnIrLogin1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addGap(63, 63, 63)
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55))
+                .addContainerGap(87, Short.MAX_VALUE))
         );
 
         panelContenedor.add(panelCrear, "panel_crear");
@@ -625,6 +625,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         mostrar(panelLogin);
         java.awt.CardLayout layout = (java.awt.CardLayout) panelContenedor.getLayout();
         layout.show(panelContenedor, "pantalla_login");
+        txtNumR.setText("");
+        txtCantidad.setText("");
+        txtComentario.setText("");
     }//GEN-LAST:event_btnExitActionPerformed
 
     /**
@@ -854,6 +857,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         //Creamos una ventana de una sola columna
         javax.swing.JPanel panel = new javax.swing.JPanel(new java.awt.GridLayout(0, 1));
         //Le ponemos los elementos que queremos en la ventana
+        panel.add(new javax.swing.JLabel("Introduce tu contraseña actual:"));
+        javax.swing.JPasswordField txtActual = new javax.swing.JPasswordField();
+        panel.add(txtActual);
         panel.add(new javax.swing.JLabel("Introduce la nueva contraseña:"));
         javax.swing.JPasswordField txtNueva = new javax.swing.JPasswordField();
         panel.add(txtNueva);
@@ -873,12 +879,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         if (result == javax.swing.JOptionPane.OK_OPTION) {
             try {
-
+                String actual = new String(txtActual.getPassword());
                 String nueva = new String(txtNueva.getPassword());
                 String conf = new String(txtConf.getPassword());
 
                 //Cambiamos la contraseña antigua a por la nueva
-                bancoService.cambiarContrasenia(this.cuentaActiva.getId(), nueva, conf);
+                bancoService.cambiarContrasenia(this.cuentaActiva.getId(),actual, nueva, conf);
 
                 //Mostramos mensaje de exito
                 javax.swing.JOptionPane.showMessageDialog(this, "¡Contraseña actualizada con éxito!", "Éxito", javax.swing.JOptionPane.INFORMATION_MESSAGE);

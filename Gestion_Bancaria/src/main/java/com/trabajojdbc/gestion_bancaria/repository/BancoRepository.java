@@ -71,20 +71,17 @@ public class BancoRepository {
     public static List<Transacciones> obtenerMovimientosPaginados(int cuentaId, int pagina, int tamanoPagina) {
         EntityManager em = EntityManagerUtil.getEntityManager();
         try {
-            // Obtenemos mediante esta query todas las transacciones del usuario
-            List<Transacciones> todasLasTransacciones = em.createQuery(
-                    "SELECT t FROM Transacciones t WHERE t.cuentaEmisor.id = :miId OR t.cuentaReceptor.id = :miId ORDER BY t.id DESC",
-                    Transacciones.class)
-                    .setParameter("miId", cuentaId)
+            //primer registro que mirar
+            int offset = pagina * tamanoPagina;
+            // Obtenemos mediante esta query NATIVA las transacciones del usuario filtradas por la Query para la paginacion
+            //*He intendo hacerlo con createQuery añadiendo el metodo setFirstResult y setMaxResult pero JPA no se lleva muy bien que digamos con la paginacion, 
+            //a si que he tenido que hacerlo con una consulta nativa, que si funciona 
+            return em.createNativeQuery("SELECT * FROM Transacciones WHERE ID_CuentaE = ?1 OR ID_CuentaR = ?2 ORDER BY ID DESC LIMIT ?3 OFFSET ?4", Transacciones.class)
+                    .setParameter(1, cuentaId)       
+                    .setParameter(2, cuentaId)      
+                    .setParameter(3, tamanoPagina)   
+                    .setParameter(4, offset)         
                     .getResultList();
-
-            // Obtenemos la primera página de la lista a mostrar
-            int inicio = pagina * tamanoPagina;
-            // Ponemos un límite en caso de que la ultima página tenga menos de 5
-            int fin = Math.min(inicio + tamanoPagina, todasLasTransacciones.size());
-
-            //Devolvemos "el recorte" de la lista
-            return todasLasTransacciones.subList(inicio, fin);
 
         } catch (Exception e) {
             return Collections.emptyList();

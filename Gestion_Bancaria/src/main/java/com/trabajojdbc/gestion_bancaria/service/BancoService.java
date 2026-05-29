@@ -302,24 +302,30 @@ public class BancoService {
      * esté reciclando la contraseña actual.
      *
      * @param idCuenta El ID interno de la cuenta que está activa.
+     * @param passActual contraseña actual.
      * @param nuevaPass La nueva contraseña en texto plano elegida.
      * @param confirmacionPass La repetición de la contraseña para evitar
      * errores tipográficos.
      * @throws Exception Si las contraseñas están vacías, no coinciden, son
      * iguales a la actual, o hay un error de conexión con la base de datos.
      */
-    public void cambiarContrasenia(int idCuenta, String nuevaPass, String confirmacionPass) throws Exception {
-        if (nuevaPass == null || nuevaPass.trim().isEmpty() || confirmacionPass == null || confirmacionPass.trim().isEmpty()) {
+    public void cambiarContrasenia(int idCuenta, String passActual, String nuevaPass, String confirmacionPass) throws Exception {
+        if (passActual == null || passActual.trim().isEmpty() || nuevaPass == null || nuevaPass.trim().isEmpty() || confirmacionPass == null || confirmacionPass.trim().isEmpty()) {
             throw new Exception("Las contraseñas no pueden estar vacías.");
         }
         if (!nuevaPass.equals(confirmacionPass)) {
             throw new Exception("Las contraseñas no coinciden. Inténtalo de nuevo.");
         }
+
         EntityManager em = EntityManagerUtil.getEntityManager();
         try {
             em.getTransaction().begin();
             //Aplicamos la query para encontar una cuenta por su id
             Cuenta cuenta = em.find(Cuenta.class, idCuenta);
+            //Comprobamos que la contraseña sea la correcta
+            if (!BCrypt.checkpw(passActual, cuenta.getContrasenia())) {
+                throw new Exception("La contraseña actual introducida es incorrecta.");
+            }
             //Comprobamos que la contraseña no sea la misma
             if (BCrypt.checkpw(nuevaPass, cuenta.getContrasenia())) {
                 throw new Exception("La nueva contraseña no puede ser igual a la que ya tienes activa.");
@@ -332,7 +338,7 @@ public class BancoService {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
             }
-            if (e.getMessage() != null && e.getMessage().contains("La nueva contraseña no puede ser igual")) {
+            if (e.getMessage() != null && e.getMessage().contains("La nueva contraseña no puede ser igual") || e.getMessage().contains("La contraseña actual")) {
                 throw e;
             }
             throw new Exception("Error al actualizar la contraseña en la base de datos.");
